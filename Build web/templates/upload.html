@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Uploader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Image Uploader</h1>
+    <br>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <input type="file" name="file">
+        </div>
+        <input class="btn btn-success" type="submit" value="Upload">
+    </form>
+    {% if error %}
+    <p class="error"><strong>Error:</strong> {{ error }}
+        {% endif %}
+</div>
+</body>
+</html>
