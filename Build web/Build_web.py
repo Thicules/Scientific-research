@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_file, redirect, url_for, request
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -33,10 +34,13 @@ def upload_file():
 
         # Kiểm tra xem file có hợp lệ hay không
         if file and allowed_file(file.filename):
-            # Lưu file vào thư mục UPLOAD_FOLDER
+            # Lưu file vào thư mục UPLOAD_FOLDER với tên gồm thời gian hiện tại và tên file gốc
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-            return 'ok', 200
+            now = datetime.now().strftime("%Y%m%d-%H%M%S")
+            new_filename = f"{now}-{filename}"
+            file.save(os.path.join(UPLOAD_FOLDER, new_filename))
+            caption = request.form.get('caption', '') # Lấy chú thích từ biến POST
+            return render_template('image.html', filename=new_filename, caption=caption)
         else:
             return 'Invalid file format', 400
     return render_template('upload.html', error=error)
