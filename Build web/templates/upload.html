@@ -5,20 +5,44 @@
     <title>Image Uploader</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="static/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .d-flex.justify-content-center.align-items-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1>Image Uploader</h1>
-    <br>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <input type="file" name="file">
-        </div>
-        <input class="btn btn-success" type="submit" value="Upload">
-    </form>
-    {% if error %}
-    <p class="error"><strong>Error:</strong> {{ error }}
-        {% endif %}
+<div class="d-flex justify-content-center align-items-center">
+    <div class="container">
+        <h1>Image Uploader</h1>
+        <br>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="d-flex flex-column">
+            <div class="form-group">
+                <input type="file" name="file">
+            </div>
+            <div class="form-group">
+                <label for="caption">Caption:</label>
+                <input type="text" id="caption" name="caption">
+            </div>
+            <input class="btn btn-success" type="submit" value="Upload">
+        </form>
+        {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+            {% endif %}
+    </div>
 </div>
 </body>
 </html>
