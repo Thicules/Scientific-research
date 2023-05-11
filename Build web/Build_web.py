@@ -2,6 +2,26 @@ from flask import Flask, render_template, send_file, redirect, url_for, request
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from keras.models import load_model
+import numpy as np
+from keras.utils import image_utils
+def animal():
+    classifier = load_model('catdog_cnn_model.h5')
+    pathtofile="C:/Users/BAO NGAN/Desktop/BaoNgan-Research/images"
+    # Get a list of all image files sorted by modification time
+    image_files = sorted([os.path.join(pathtofile, f) for f in os.listdir(pathtofile) if f.endswith('.jpg')], key=os.path.getmtime, reverse=True)
+
+    # Load the latest image file
+    test_image =image_utils.load_img(image_files[0],target_size =(64,64,3))
+    test_image =image_utils.img_to_array(test_image)
+    test_image =np.expand_dims(test_image, axis =0)
+    result = classifier.predict(test_image)
+    if result[0][0] >= 0.5:
+        prediction = 'dog'
+    else:
+        prediction = 'cat'
+    return(prediction)
+
 
 app = Flask(__name__)
 
@@ -39,12 +59,19 @@ def upload_file():
             now = datetime.now().strftime("%Y%m%d-%H%M%S")
             new_filename = f"{now}-{filename}"
             file.save(os.path.join(UPLOAD_FOLDER, new_filename))
-            caption = request.form.get('caption', '') # Lấy chú thích từ biến POST
-            return render_template('image.html', filename=new_filename, caption=caption)
+              # Run script test.py với đường dẫn đến tệp tin ảnh với đối số
+            
+
+            caption = animal() # Sử dụng dự đoán làm chú thích
+            print(caption)
+            return render_template('image.html', filename=new_filename, prediction=caption)
+
         else:
             return 'Invalid file format', 400
     return render_template('upload.html', error=error)
 
+
+  
 # Xử lý yêu cầu nhận ảnh từ máy chủ web
 @app.route('/image/<filename>')
 def get_image(filename):
