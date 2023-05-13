@@ -1,5 +1,6 @@
 import cv2
 import os
+import shutil
 import xml.etree.ElementTree as ET
 
 #Lưu ý: Mỗi lần phân loại nhớ thay đường dẫn, để duyệt từng folder cho chắc (thay 7 lần)
@@ -28,9 +29,9 @@ for image_file in os.listdir(images_dir):
     if len(root.findall('.//object')) > 0:
         new_image_file = os.path.splitext(image_file)[0] + '.jpg'
         new_image_path = os.path.join(bad_road_dir, new_image_file)
-        cv2.imwrite(new_image_path, image)
+        shutil.move(image_path, new_image_path)
     # Ngược lại, chuyển ảnh vào thư mục Good road
     else:
         new_image_file = os.path.splitext(image_file)[0] + '.jpg'
         new_image_path = os.path.join(good_road_dir, new_image_file)
-        cv2.imwrite(new_image_path, image)
+        shutil.move(image_path, new_image_path)
