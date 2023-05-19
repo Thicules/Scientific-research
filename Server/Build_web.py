@@ -7,7 +7,7 @@ import numpy as np
 from keras.utils import image_utils
 def animal():
     classifier = load_model('catdog_cnn_model.h5')
-    pathtofile="C:/Users/BAO NGAN/Desktop/BaoNgan-Research/images"
+    pathtofile="C:/Users/Cao Thi/Desktop/Scientific-research/Server/images"
     # Get a list of all image files sorted by modification time
     image_files = sorted([os.path.join(pathtofile, f) for f in os.listdir(pathtofile) if f.endswith('.jpg')], key=os.path.getmtime, reverse=True)
 

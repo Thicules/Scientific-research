@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Image Upload</title>
+	<style>
+		img {
+			max-width: 100%;
+			height: auto;
+			display: block;
+			margin: 0 auto;
+		}
+
+		p {
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<img src="{{ url_for('get_image', filename=filename) }}" alt="Uploaded Image">
+	<p>Result: {{ prediction}}</p>
+</body>
+</html>
