@@ -6,8 +6,8 @@ from keras.models import load_model
 import numpy as np
 from keras.utils import image_utils
 def animal():
-    classifier = load_model('catdog_cnn_model.h5')
-    pathtofile="C:/Users/Cao Thi/Desktop/Scientific-research/Server/images"
+    classifier = load_model('E:\Scientific-research\Server\catdog_cnn_model.h5')
+    pathtofile="E:\Scientific-research\Server\images"
     # Get a list of all image files sorted by modification time
     image_files = sorted([os.path.join(pathtofile, f) for f in os.listdir(pathtofile) if f.endswith('.jpg')], key=os.path.getmtime, reverse=True)
 
@@ -60,9 +60,10 @@ def upload_file():
             new_filename = f"{now}-{filename}"
             file.save(os.path.join(UPLOAD_FOLDER, new_filename))
               # Run script test.py với đường dẫn đến tệp tin ảnh với đối số
-            
-
             caption = animal() # Sử dụng dự đoán làm chú thích
+            # Lưu dự đoán vào file txt với thông tin về tên file và thời gian dự đoán
+            with open('caption.txt', 'a') as f:
+                f.write(f"Caption for {new_filename} predicted at {now}: {caption}\n")
             print(caption)
             return render_template('image.html', filename=new_filename, prediction=caption)
 
