@@ -42,7 +42,6 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
-# Xử lý yêu cầu đăng ảnh lên máy chủ web
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # Kiểm tra xem request có chứa file hình ảnh hay không
