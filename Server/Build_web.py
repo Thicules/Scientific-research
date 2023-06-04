@@ -42,31 +42,34 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-    # Kiểm tra xem request có chứa file hình ảnh hay không
-    if 'file' not in request.files:
-        return 'No file selected', 400
+    error = None
+    if request.method == 'POST':
+        # Kiểm tra xem request có chứa file hình ảnh hay không
+        if 'file' not in request.files:
+            return 'No file selected', 400
 
-    file = request.files['file']
+        file = request.files['file']
 
-    # Kiểm tra xem file có hợp lệ hay không
-    if file and allowed_file(file.filename):
-        # Lưu file vào thư mục UPLOAD_FOLDER với tên gồm thời gian hiện tại và tên file gốc
-        filename = secure_filename(file.filename)
-        now = datetime.now().strftime("%Y%m%d-%H%M%S")
-        new_filename = f"{now}-{filename}"
-        file.save(os.path.join(UPLOAD_FOLDER, new_filename))
-        # Run script test.py với đường dẫn đến tệp tin ảnh với đối số
-        caption = animal() # Sử dụng dự đoán làm chú thích
-        # Lưu dự đoán vào file txt với thông tin về tên file và thời gian dự đoán
-        with open('caption.txt', 'a') as f:
-            f.write(f"Caption for {new_filename} predicted at {now}: {caption}\n")
-        print(caption)
-        return f"Image {new_filename} uploaded successfully with prediction: {caption}"
+        # Kiểm tra xem file có hợp lệ hay không
+        if file and allowed_file(file.filename):
+            # Lưu file vào thư mục UPLOAD_FOLDER với tên gồm thời gian hiện tại và tên file gốc
+            filename = secure_filename(file.filename)
+            now = datetime.now().strftime("%Y%m%d-%H%M%S")
+            new_filename = f"{now}-{filename}"
+            file.save(os.path.join(UPLOAD_FOLDER, new_filename))
+              # Run script test.py với đường dẫn đến tệp tin ảnh với đối số
+            caption = animal() # Sử dụng dự đoán làm chú thích
+            # Lưu dự đoán vào file txt với thông tin về tên file và thời gian dự đoán
+            with open('caption.txt', 'a') as f:
+                f.write(f"Caption for {new_filename} predicted at {now}: {caption}\n")
+            print(caption)
+            return render_template('image.html', filename=new_filename, prediction=caption)
 
-    else:
-        return 'Invalid file format', 400
+        else:
+            return 'Invalid file format', 400
+    return render_template('upload.html', error=error)
 
 
   
