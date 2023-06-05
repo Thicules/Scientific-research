@@ -70,8 +70,6 @@ def upload_file():
         else:
             return 'Invalid file format', 400
     return render_template('upload.html', error=error)
-
-
   
 # Xử lý yêu cầu nhận ảnh từ máy chủ web
 @app.route('/image/<filename>')
