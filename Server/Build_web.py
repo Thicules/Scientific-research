@@ -32,6 +32,10 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
 
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
