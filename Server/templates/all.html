@@ -160,18 +160,37 @@
 <script>
     {% for image_file in images %}
     function initMap_{{ loop.index }}() {
-        // Vị trí của bản đồ (thay thế lat và lng bằng vị trí thích hợp)
-        const position_{{ loop.index }} = { lat: 10.8231, lng: 106.6297 };
+        // Lấy tọa độ từ locations
+        const lat = {{ locations[image_file]['lat'] }};
+        const long = {{ locations[image_file]['long'] }};
+        // Vị trí của bản đồ
+        const position_{{ loop.index }} = { lat: lat, lng: long };
         // Khởi tạo bản đồ
         const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
             zoom: 12,
             center: position_{{ loop.index }},
         });
-        // Đánh dấu vị trí trên bản đồ
+        // Tạo info window chứa thông tin về tọa độ
+        const contentString_{{ loop.index }} = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h3 id="firstHeading" class="firstHeading">Location Details</h3>'+
+          '<div id="bodyContent">'+
+          '<p>Latitude: ' + lat + '</p>' +
+          '<p>Longitude: ' + long + '</p>' +
+          '</div>'+
+          '</div>';
+        const infowindow_{{ loop.index }} = new google.maps.InfoWindow({
+          content: contentString_{{ loop.index }}
+        });
+        // Đánh dấu vị trí trên bản đồ và gắn info window vào đánh dấu
         const marker_{{ loop.index }} = new google.maps.Marker({
             position: position_{{ loop.index }},
             map: map_{{ loop.index }},
-            title: "Hồ Chí Minh",
+            title: "Image location",
+        });
+        marker_{{ loop.index }}.addListener("click", () => {
+            infowindow_{{ loop.index }}.open(map_{{ loop.index }}, marker_{{ loop.index }});
         });
     }
     initMap_{{ loop.index }}();

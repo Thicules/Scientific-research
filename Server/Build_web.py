@@ -6,6 +6,7 @@ from keras.models import load_model
 import numpy as np
 from keras.utils import image_utils
 from PIL import Image
+import geocoder 
 
 
 def animal(imagePath):
@@ -49,31 +50,51 @@ def upload_image():
     if not allowed_file(file.filename):
         return 'Invalid file type.', 400
 
+    # Kiểm tra các giá trị latitude và longitude có tồn tại trong request.form
+    if 'latitude' not in request.form or 'longitude' not in request.form:
+        return 'Missing latitude or longitude values.', 400
+
+    # Lấy giá trị tọa độ từ dữ liệu POST
+    latitude = request.form['latitude']
+    longitude = request.form['longitude']
+
+    # Chuyển đổi tọa độ sang định dạng chuỗi với kí hiệu đông/tây, nam/bắc
+    g = geocoder.google([latitude, longitude], method='reverse')
+    location_str = g.address
+
     # Lưu tập tin ảnh vào thư mục static/images trên server
     filename = secure_filename(file.filename)
     file_path = os.path.join('static', 'images', filename)
     file.save(file_path)
 
-    # Chạy model và đổi tên tệp tin ảnh thành dạng filename:res
+    # Chạy model và đổi tên tệp tin ảnh thành dạng filename_res_location
     res = animal(file_path)
-    new_filename = f'{os.path.splitext(filename)[0]}_{res}{os.path.splitext(filename)[1]}'
+    res_str = res.replace(' ', '_')
+    new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
     new_file_path = os.path.join('static', 'images', new_filename)
     os.rename(file_path, new_file_path)
 
-    #Phản hồi kết quả
-    return res
+    # Trả về kết quả và địa chỉ của địa điểm
+    return res, location_str
 
 @app.route('/all')
 def show_all():
     images = []
     results = {}
+    locations = {}
     for filename in os.listdir(os.path.join('static', 'images')):
         if allowed_file(filename):
             images.append(filename)
-            res = os.path.splitext(filename)[0].split('_')[-1]
+            res = os.path.splitext(filename)[0].split('_')[-2]
             results[filename] = res
+            lat_long = os.path.splitext(filename)[0].split('_')[-1]
+            if ',' in lat_long:
+                lat, long = lat_long.split(',')
+            else:
+                lat = long = lat_long
+            locations[filename] = {'lat': lat, 'long': long}
 
-    return render_template('all.html', images=images, results=results)
+    return render_template('all.html', images=images, results=results, locations=locations)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
