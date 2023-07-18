@@ -1,83 +1,79 @@
-from flask import Flask, render_template, send_file, redirect, url_for, request
+from flask import Flask, render_template, send_file, redirect, url_for, request, make_response
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from keras.models import load_model
 import numpy as np
 from keras.utils import image_utils
-def animal():
+from PIL import Image
+
+
+def animal(imagePath):
     classifier = load_model('catdog_cnn_model.h5')
-    pathtofile="E:\Scientific-research\Server\images"
     # Get a list of all image files sorted by modification time
-    image_files = sorted([os.path.join(pathtofile, f) for f in os.listdir(pathtofile) if f.endswith('.jpg')], key=os.path.getmtime, reverse=True)
+    image_files = imagePath
 
     # Load the latest image file
-    test_image =image_utils.load_img(image_files[0],target_size =(64,64,3))
-    test_image =image_utils.img_to_array(test_image)
-    test_image =np.expand_dims(test_image, axis =0)
+    test_image = Image.open(image_files).resize((64, 64))
+    test_image = np.array(test_image)
+    test_image = np.expand_dims(test_image, axis=0)
     result = classifier.predict(test_image)
     if result[0][0] >= 0.5:
         prediction = 'dog'
     else:
         prediction = 'cat'
-    return(prediction)
+    return prediction
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def welcome():
-    return redirect('/upload')
-
-UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', os.path.join(os.getcwd(), 'images'))
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-# Kiểm tra phần mở rộng của file
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Tạo thư mục lưu trữ tệp tin nếu nó chưa tồn tại
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+    return render_template('index.html')
 
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    error = None
-    if request.method == 'POST':
-        # Kiểm tra xem request có chứa file hình ảnh hay không
-        if 'file' not in request.files:
-            return 'No file selected', 400
 
-        file = request.files['file']
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
-        # Kiểm tra xem file có hợp lệ hay không
-        if file and allowed_file(file.filename):
-            # Lưu file vào thư mục UPLOAD_FOLDER với tên gồm thời gian hiện tại và tên file gốc
-            filename = secure_filename(file.filename)
-            now = datetime.now().strftime("%Y%m%d-%H%M%S")
-            new_filename = f"{now}-{filename}"
-            file.save(os.path.join(UPLOAD_FOLDER, new_filename))
-              # Run script test.py với đường dẫn đến tệp tin ảnh với đối số
-            caption = animal() # Sử dụng dự đoán làm chú thích
-            # Lưu dự đoán vào file txt với thông tin về tên file và thời gian dự đoán
-            with open('caption.txt', 'a') as f:
-                f.write(f"Caption for {new_filename} predicted at {now}: {caption}\n")
-            print(caption)
-            return render_template('image.html', filename=new_filename, prediction=caption)
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-        else:
-            return 'Invalid file format', 400
-    return render_template('upload.html', error=error)
-  
-# Xử lý yêu cầu nhận ảnh từ máy chủ web
-@app.route('/image/<filename>')
-def get_image(filename):
-    try:
-        return send_file(os.path.join(UPLOAD_FOLDER, filename), as_attachment=True)
-    except FileNotFoundError:
-        return 'Error: File not found'
+@app.route('/upload', methods=['POST'])
+def upload_image():
+    if 'image' not in request.files:
+        return 'No image uploaded.', 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return 'No image selected.', 400
+    if not allowed_file(file.filename):
+        return 'Invalid file type.', 400
+
+    # Lưu tập tin ảnh vào thư mục static/images trên server
+    filename = secure_filename(file.filename)
+    file_path = os.path.join('static', 'images', filename)
+    file.save(file_path)
+
+    # Chạy model và đổi tên tệp tin ảnh thành dạng filename:res
+    res = animal(file_path)
+    new_filename = f'{os.path.splitext(filename)[0]}_{res}{os.path.splitext(filename)[1]}'
+    new_file_path = os.path.join('static', 'images', new_filename)
+    os.rename(file_path, new_file_path)
+
+    #Phản hồi kết quả
+    return res
+
+@app.route('/all')
+def show_all():
+    images = []
+    results = {}
+    for filename in os.listdir(os.path.join('static', 'images')):
+        if allowed_file(filename):
+            images.append(filename)
+            res = os.path.splitext(filename)[0].split('_')[-1]
+            results[filename] = res
+
+    return render_template('all.html', images=images, results=results)
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', port = 8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
