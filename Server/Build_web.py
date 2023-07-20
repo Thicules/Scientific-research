@@ -1,13 +1,12 @@
-from flask import Flask, render_template, send_file, redirect, url_for, request, make_response
+from flask import Flask, render_template, request
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from keras.models import load_model
 import numpy as np
-from keras.utils import image_utils
 from PIL import Image
 import geocoder 
-
+from ISR.models import RDN
 
 def animal(imagePath):
     classifier = load_model('catdog_cnn_model.h5')
@@ -32,16 +31,28 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
-@app.route('/home')
-def home():
-    return render_template('index.html')
-
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
 
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Hàm tăng độ phân giải ảnh
+def upscale_image(image_path):
+    # Đọc ảnh
+    img = Image.open(image_path)
+
+    # Chuẩn bị model tăng độ phân giải (RDN)
+    rdn = RDN(weights='psnr-small')
+
+    # Tiến hành tăng độ phân giải
+    sr_img = rdn.predict(np.array(img))
+
+    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
+    sr_img = Image.fromarray(sr_img)
+
+    return sr_img
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -70,6 +81,10 @@ def upload_image():
     filename = secure_filename(file.filename)
     file_path = os.path.join('static', 'images', filename)
     file.save(file_path)
+
+    # Tăng độ phân giải ảnh
+    sr_img = upscale_image(file_path)
+    sr_img.save(file_path)
 
     # Chạy model và đổi tên tệp tin ảnh thành dạng filename_res_location
     res = animal(file_path)
