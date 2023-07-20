@@ -7,6 +7,7 @@ import numpy as np
 from keras.utils import image_utils
 from PIL import Image
 import geocoder 
+from ISR.models import RDN
 
 
 def animal(imagePath):
@@ -32,12 +33,32 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
 
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Hàm tăng độ phân giải ảnh
+def upscale_image(image_path):
+    # Đọc ảnh
+    img = Image.open(image_path)
+
+    # Chuẩn bị model tăng độ phân giải (RDN)
+    rdn = RDN(weights='psnr-small')
+
+    # Tiến hành tăng độ phân giải
+    sr_img = rdn.predict(np.array(img))
+
+    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
+    sr_img = Image.fromarray(sr_img)
+
+    return sr_img
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -67,15 +88,20 @@ def upload_image():
     file_path = os.path.join('static', 'images', filename)
     file.save(file_path)
 
-    # Chạy model và đổi tên tệp tin ảnh thành dạng filename_res_location
+    # Tăng độ phân giải của ảnh
+    super_resolution_image = upscale_image(file_path)
+
+    # Tạo tên mới cho ảnh đã tăng độ phân giải
     res = animal(file_path)
     res_str = res.replace(' ', '_')
-    new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
+    new_filename = f'sr_{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
     new_file_path = os.path.join('static', 'images', new_filename)
-    os.rename(file_path, new_file_path)
+
+    # Lưu ảnh đã tăng độ phân giải vào thư mục static/images trên server
+    super_resolution_image.save(new_file_path)
 
     # Trả về kết quả và địa chỉ của địa điểm
-    return res, location_str
+    return render_template('index.html', sr_image_path=new_file_path, result=res, location=location_str)
 
 @app.route('/all')
 def show_all():
@@ -85,7 +111,11 @@ def show_all():
     for filename in os.listdir(os.path.join('static', 'images')):
         if allowed_file(filename):
             images.append(filename)
-            res = os.path.splitext(filename)[0].split('_')[-2]
+            result = os.path.splitext(filename)[0].split('_')
+            if len(result) >= 2:
+                res = result[-2]
+            else:
+                 res = "Unknown"
             results[filename] = res
             lat_long = os.path.splitext(filename)[0].split('_')[-1]
             if ',' in lat_long:
