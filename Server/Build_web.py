@@ -1,14 +1,12 @@
-from flask import Flask, render_template, send_file, redirect, url_for, request, make_response
+from flask import Flask, render_template, request
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from keras.models import load_model
 import numpy as np
-from keras.utils import image_utils
 from PIL import Image
 import geocoder 
-from ISR.models import RDN
-
+from ISR.models import RDN, RRDN
 
 def animal(imagePath):
     classifier = load_model('catdog_cnn_model.h5')
@@ -33,10 +31,6 @@ app = Flask(__name__)
 def welcome():
     return render_template('index.html')
 
-@app.route('/home')
-def home():
-    return render_template('index.html')
-
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
 
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
@@ -49,11 +43,11 @@ def upscale_image(image_path):
     # Đọc ảnh
     img = Image.open(image_path)
 
-    # Chuẩn bị model tăng độ phân giải (RDN)
-    rdn = RDN(weights='psnr-small')
+    # Chuẩn bị model tăng độ phân giải (SRGAN)
+    rrdn = RRDN(weights='gans')
 
     # Tiến hành tăng độ phân giải
-    sr_img = rdn.predict(np.array(img))
+    sr_img = rrdn.predict(np.array(img))
 
     # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
     sr_img = Image.fromarray(sr_img)
@@ -88,20 +82,19 @@ def upload_image():
     file_path = os.path.join('static', 'images', filename)
     file.save(file_path)
 
-    # Tăng độ phân giải của ảnh
-    super_resolution_image = upscale_image(file_path)
+    # Tăng độ phân giải ảnh
+    sr_img = upscale_image(file_path)
+    sr_img.save(file_path)
 
-    # Tạo tên mới cho ảnh đã tăng độ phân giải
+    # Chạy model và đổi tên tệp tin ảnh thành dạng filename_res_location
     res = animal(file_path)
     res_str = res.replace(' ', '_')
-    new_filename = f'sr_{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
+    new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
     new_file_path = os.path.join('static', 'images', new_filename)
-
-    # Lưu ảnh đã tăng độ phân giải vào thư mục static/images trên server
-    super_resolution_image.save(new_file_path)
+    os.rename(file_path, new_file_path)
 
     # Trả về kết quả và địa chỉ của địa điểm
-    return render_template('index.html', sr_image_path=new_file_path, result=res, location=location_str)
+    return res, location_str
 
 @app.route('/all')
 def show_all():
@@ -111,11 +104,7 @@ def show_all():
     for filename in os.listdir(os.path.join('static', 'images')):
         if allowed_file(filename):
             images.append(filename)
-            result = os.path.splitext(filename)[0].split('_')
-            if len(result) >= 2:
-                res = result[-2]
-            else:
-                 res = "Unknown"
+            res = os.path.splitext(filename)[0].split('_')[-2]
             results[filename] = res
             lat_long = os.path.splitext(filename)[0].split('_')[-1]
             if ',' in lat_long:

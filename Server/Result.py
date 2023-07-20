@@ -5,9 +5,10 @@ import io
 import os
 import geocoder 
 import googlemaps
+import cv2
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/Nhat Thu/Downloads/testmeo.png'
+image_path = 'C:/Users/Nhat Thu/Downloads/testjpg.jpg'
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
