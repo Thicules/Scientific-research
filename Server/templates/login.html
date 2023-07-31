@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Road Damage</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link href="{{ url_for('static', filename='css/style_login.css') }}" rel="stylesheet">
+</head>
+<body>
+  <div class="box-form">
+    <div class="left">
+      <div class="overlay">
+        <h1>Road Damage</h1>
+        <p>Enjoy Every Road With Us!</p>
+        <span>
+          <p>Login with social media</p>
+          <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+          <a href="#"><i class="fa fa-google" aria-hidden="true"></i></a>
+          <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+        </span>
+      </div>
+    </div>
+
+    <div class="right">
+      <h5>Login</h5>
+      <p>Don't have an account? <a href="#">Create Your Account</a> it takes less than a minute</p>
+      <div class="inputs">
+        <form method="POST" action="{{ url_for('login') }}">
+          <input type="text" name="username" placeholder="Username">
+          <br>
+          <input type="password" name="password" placeholder="Password">
+        
+          <br><br>
+        
+          <div class="remember-me--forget-password">
+            <label>
+              <input type="checkbox" name="remember" checked>
+              <span class="text-checkbox">Remember me</span>
+            </label>
+            <p>Forgot password?</p>
+          </div>
+        
+          <br>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

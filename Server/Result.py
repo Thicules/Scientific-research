@@ -7,7 +7,7 @@ import geocoder
 import googlemaps
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/M S I/Downloads/download.jpg'
+image_path = 'E:/demo/images/image.jpg'
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
