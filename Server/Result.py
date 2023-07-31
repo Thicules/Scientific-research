@@ -3,11 +3,10 @@ import requests
 from PIL import Image
 import io
 import os
-import geocoder 
 import googlemaps
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/M S I/Downloads/download.jpg'
+image_path = "C:\\Users\\BAO NGAN\\Downloads\\8BWst4aF_400x400.jpg"
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
@@ -15,9 +14,11 @@ filename = os.path.basename(image_path)
 # Địa chỉ của server
 server_url = 'http://127.0.0.1:8080/upload'
 
-# Tọa độ của máy chủ gửi lên
-g = geocoder.ip('me')
-latitude, longitude = g.latlng
+# Sử dụng Google Maps Geocoding API để lấy tọa độ của máy chủ gửi lên
+gmaps = googlemaps.Client(key='AIzaSyCtQkhii_0MXu2paXoQyYLSd5DP2ERLtUs')
+geocode_result = gmaps.geocode('me')
+latitude = geocode_result[0]['geometry']['location']['lat']
+longitude = geocode_result[0]['geometry']['location']['lng']
 
 # Đọc ảnh và chuyển đổi sang định dạng bytes
 with open(image_path, 'rb') as f:
