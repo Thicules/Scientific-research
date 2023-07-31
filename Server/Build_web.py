@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, redirect, url_for, request
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -53,6 +53,20 @@ def upscale_image(image_path):
     sr_img = Image.fromarray(sr_img)
 
     return sr_img
+
+@app.route('/home')
+def home():
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('home'))
+    return render_template('login.html', error=error)
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
