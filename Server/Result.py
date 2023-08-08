@@ -4,9 +4,10 @@ from PIL import Image
 import io
 import os
 import googlemaps
+import cv2
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = "C:\\Users\\BAO NGAN\\Downloads\\8BWst4aF_400x400.jpg"
+image_path = 'C:/Users/Nhat Thu/Downloads/testjpg.jpg'
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)

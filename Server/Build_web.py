@@ -6,7 +6,7 @@ from keras.models import load_model
 import numpy as np
 from PIL import Image
 import geocoder 
-from ISR.models import RDN
+from ISR.models import RDN, RRDN
 
 def animal(imagePath):
     classifier = load_model('catdog_cnn_model.h5')
@@ -42,12 +42,11 @@ def allowed_file(filename):
 def upscale_image(image_path):
     # Đọc ảnh
     img = Image.open(image_path)
-
-    # Chuẩn bị model tăng độ phân giải (RDN)
-    rdn = RDN(weights='psnr-small')
+    # Chuẩn bị model tăng độ phân giải (SRGAN)
+    rrdn = RRDN(weights='gans')
 
     # Tiến hành tăng độ phân giải
-    sr_img = rdn.predict(np.array(img))
+    sr_img = rrdn.predict(np.array(img))
 
     # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
     sr_img = Image.fromarray(sr_img)
