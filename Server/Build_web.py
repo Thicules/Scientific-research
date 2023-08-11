@@ -53,7 +53,7 @@ def upscale_image(image_path):
 
     return sr_img
 
-@app.route('/home')
+@app.route('/home',methods=['GET', 'POST'])
 def home():
     return render_template('index.html')
 
