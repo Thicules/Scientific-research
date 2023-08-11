@@ -5,9 +5,10 @@ import io
 import os
 import googlemaps
 import cv2
+import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/Nhat Thu/Downloads/testjpg.jpg'
+image_path = 'C:/Users/Nhat Thu/Downloads/meomeo.jpg'
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
@@ -16,10 +17,8 @@ filename = os.path.basename(image_path)
 server_url = 'http://127.0.0.1:8080/upload'
 
 # Sử dụng Google Maps Geocoding API để lấy tọa độ của máy chủ gửi lên
-gmaps = googlemaps.Client(key='AIzaSyCtQkhii_0MXu2paXoQyYLSd5DP2ERLtUs')
-geocode_result = gmaps.geocode('me')
-latitude = geocode_result[0]['geometry']['location']['lat']
-longitude = geocode_result[0]['geometry']['location']['lng']
+latitude = random.uniform(-90,90)
+longitude = random.uniform(-180,180)
 
 # Đọc ảnh và chuyển đổi sang định dạng bytes
 with open(image_path, 'rb') as f:
