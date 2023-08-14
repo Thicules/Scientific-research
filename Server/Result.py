@@ -3,12 +3,10 @@ import requests
 from PIL import Image
 import io
 import os
-import googlemaps
-import cv2
 import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/Nhat Thu/Downloads/meomeo.jpg'
+image_path = 'C:/Users/M S I/Downloads/download.jpg'
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
