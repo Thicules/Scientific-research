@@ -17,7 +17,7 @@ def animal(imagePath):
     image_files = imagePath
 
     # Load the latest image file
-    test_image = Image.open(image_files).resize((64, 64))
+    test_image = Image.open(image_files).resize((64, 64))   
     test_image = np.array(test_image)
     test_image = np.expand_dims(test_image, axis=0)
     result = classifier.predict(test_image)
@@ -34,7 +34,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'default secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '123456'
+app.config['MYSQL_PASSWORD'] = '21522648'
 app.config['MYSQL_DB'] = 'weblogin'
  
 mysql = MySQL(app)
@@ -127,6 +127,11 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
