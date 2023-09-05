@@ -34,7 +34,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'default secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '21522648'
+app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'weblogin'
  
 mysql = MySQL(app)
@@ -147,7 +147,7 @@ def upload_image():
     # Kiểm tra các giá trị latitude và longitude có tồn tại trong request.form
     if 'latitude' not in request.form or 'longitude' not in request.form:
         return 'Missing latitude or longitude values.', 400
-    
+
     # Kiểm tra thông tin tài khoản
     if 'username' not in request.form or 'password' not in request.form:
         return 'Missing username or password.', 400
@@ -185,6 +185,11 @@ def upload_image():
     new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
     new_file_path = os.path.join('static', 'images', new_filename)
     os.rename(file_path, new_file_path)
+
+    # Lưu thông tin ảnh vào cơ sở dữ liệu
+    cursor.execute("INSERT INTO images (user_id, position, upload_date, path) VALUES (%s, %s, %s, %s)",
+                (account['id'], f"{latitude},{longitude}", datetime.now().date(), new_file_path))
+    mysql.connection.commit()
 
     # Trả về kết quả và địa chỉ của địa điểm
     return res, location_str
