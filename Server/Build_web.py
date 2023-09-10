@@ -1,11 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, session, request
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 from keras.models import load_model
 import numpy as np
 from PIL import Image
 import geocoder 
-from ISR.models import RRDN
+from ISR.models import RDN, RRDN
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -33,7 +34,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'default secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '21522648'
+app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'weblogin'
  
 mysql = MySQL(app)
@@ -58,7 +59,7 @@ def login():
             msg = 'Logged in successfully !'
             return render_template('index.html', msg = msg)
         else:
-            msg = 'Incorrect username / password !'
+            msg = 'Incorrect username/password!'
     return render_template('login.html', msg = msg)
 
 @app.route('/logout')
@@ -79,19 +80,19 @@ def register():
         cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
         account = cursor.fetchone()
         if account:
-            msg = 'Account already exists !'
+            msg = 'Account already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address !'
         elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only characters and numbers !'
+            msg = 'Username must contain only characters and numbers!'
         elif not username or not password or not email:
-            msg = 'Please fill out the form !'
+            msg = 'Please fill out the form!'
         else:
             cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, email, password, ))
             mysql.connection.commit()
-            msg = 'You have successfully registered !'
+            msg = 'You have successfully registered!'
     elif request.method == 'POST':
-        msg = 'Please fill out the form !'
+        msg = 'Please fill out the form!'
     return render_template('login.html', msg = msg)
  
 # Xử lý yêu cầu đăng ảnh lên máy chủ web
@@ -147,6 +148,20 @@ def upload_image():
     if 'latitude' not in request.form or 'longitude' not in request.form:
         return 'Missing latitude or longitude values.', 400
 
+    # Kiểm tra thông tin tài khoản
+    if 'username' not in request.form or 'password' not in request.form:
+        return 'Missing username or password.', 400
+
+    username = request.form['username']
+    password = request.form['password']
+
+    # Xác thực thông tin tài khoản với cơ sở dữ liệu
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
+    account = cursor.fetchone()
+    if not account:
+        return 'Invalid username or password.', 401
+                
     # Lấy giá trị tọa độ từ dữ liệu POST
     latitude = request.form['latitude']
     longitude = request.form['longitude']
@@ -170,6 +185,11 @@ def upload_image():
     new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
     new_file_path = os.path.join('static', 'images', new_filename)
     os.rename(file_path, new_file_path)
+
+    # Lưu thông tin ảnh vào cơ sở dữ liệu
+    cursor.execute("INSERT INTO images (user_id, position, upload_date, path) VALUES (%s, %s, %s, %s)",
+                (account['id'], f"{latitude},{longitude}", datetime.now().date(), new_file_path))
+    mysql.connection.commit()
 
     # Trả về kết quả và địa chỉ của địa điểm
     return res, location_str

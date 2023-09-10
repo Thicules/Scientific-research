@@ -1,0 +1,23 @@
+CREATE DATABASE IF NOT EXISTS `weblogin` DEFAULT CHARACTER SET UTF8MB4 COLLATE UTF8MB4_general_ci;
+USE `weblogin`;
+
+CREATE TABLE IF NOT EXISTS `accounts` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  	`username` varchar(50) NOT NULL,
+  	`email` varchar(100) NOT NULL,
+  	`password` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8MB4;
+
+CREATE TABLE IF NOT EXISTS `images` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) NOT NULL,
+    `position` varchar(50) NOT NULL,
+    `upload_date` date NOT NULL,
+    `path` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+SELECT * FROM weblogin.accounts;
+SELECT * FROM weblogin.images;

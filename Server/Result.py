@@ -6,7 +6,11 @@ import os
 import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/Nhat Thu/Downloads/gagau.jpg'
+image_path = 'C:/Users/M S I/Downloads/cat.jpg'
+
+#Thông tin user
+username = "test"
+password = "test"
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
@@ -24,7 +28,7 @@ with open(image_path, 'rb') as f:
 
 # Chuẩn bị dữ liệu để gửi yêu cầu POST đến server
 files = {'image': (filename, image_bytes, 'image/jpeg')}
-data = {'latitude': latitude, 'longitude': longitude}
+data = {'latitude': latitude, 'longitude': longitude, 'username': username, 'password': password}
 
 # Gửi yêu cầu POST đến server
 response = requests.post(server_url, files=files, data=data)
