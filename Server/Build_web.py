@@ -57,7 +57,7 @@ def login():
             session['id'] = account['id']
             session['username'] = account['username']
             msg = 'Logged in successfully !'
-            return render_template('index.html', msg = msg)
+            return render_template('userHome.html', msg = msg)
         else:
             msg = 'Incorrect username/password!'
     return render_template('login.html', msg = msg)
@@ -118,7 +118,7 @@ def upscale_image(image_path):
 
 @app.route('/home',methods=['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    return render_template('userHome.html')
 
 @app.route('/about')
 def about():
@@ -128,10 +128,41 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/userPics')
+def userPics():
+    # Lấy danh sách đường dẫn hình ảnh và vị trí từ cơ sở dữ liệu dựa trên người dùng hiện tại
+    user_id = session['id']  # Lấy id người dùng từ session
+    cur = mysql.connection.cursor()
+    query = "SELECT path, position FROM images WHERE user_id = %s"
+    cur.execute(query, (user_id,))
+    results = cur.fetchall()
+    cur.close()
+
+    # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
+    image_data = [{'path': result[0], 'position': result[1]} for result in results]
+
+    # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
+    return render_template('userPics.html', image_data=image_data)
+
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    # Lấy danh sách đường dẫn hình ảnh từ cơ sở dữ liệu dựa trên người dùng hiện tại
+    user_id = session['id']  # Lấy id người dùng từ session
+    cur = mysql.connection.cursor()
+    query = "SELECT path FROM images WHERE user_id = %s"
+    cur.execute(query, (user_id,))
+    results = cur.fetchall()
+    cur.close()
 
+    # Lấy danh sách đường dẫn hình ảnh từ kết quả truy vấn
+    image_paths = [result[0] for result in results]
+
+    # Render mẫu 'profile.html' với danh sách đường dẫn hình ảnh
+    return render_template('profile.html', image_paths=image_paths)
+
+@app.route('/edit_profile')
+def edit_profile():
+    return render_template('edit_profile.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
