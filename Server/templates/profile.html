@@ -81,63 +81,59 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a href="home" class="nav-item nav-link">Home</a>
-                    <a href="about" class="nav-item nav-link">About</a>
+                    <a href="userHome" class="nav-item nav-link">Home</a>
+                    <a href="userAbout" class="nav-item nav-link">About</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Gallery</a>
                         <div class="dropdown-menu m-0">
-                            <a href="all" class="dropdown-item">All</a>
-                            <a href="good" class="dropdown-item">Good Road</a>
-                            <a href="bad" class="dropdown-item">Bad Road</a>
+                            <a href="userAll" class="dropdown-item">All</a>
+                            <a href="userGood" class="dropdown-item">Good Road</a>
+                            <a href="userBad" class="dropdown-item">Bad Road</a>
                         </div>
                     </div>
-                    <a href="contact.html" class="nav-item nav-link"></a>
+                    <a href="userContact" class="nav-item nav-link">Contact</a>
                 </div>
-            <!-- dropdown user  -->
-            <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
-                <div class="dropdown ">
-                    <a
-                      href="#"
-                      role="button"
-                      id="dropdownMenuLink"
-                      data-mdb-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                     <div 
-                      style="font-size: 2.5rem !important"
-                     >
-                     <img class="avatar" src="static/img/base_user.jpg"/>                          
+                <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
+                    <div class="dropdown ">
+                        <a
+                          href="#"
+                          role="button"
+                          id="dropdownMenuLink"
+                          data-mdb-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                        <div style="font-size: 2.5rem !important">
+                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
+                          <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-envelope-fill"></i> 
+                                    </div>
+                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-person-lines-fill"></i>
+                                    </div>
+                                    <p class="menu-item-text">Profile</p>   
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="login">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-door-open-fill"></i>
+                                    </div>
+                                    <p class="menu-item-text">Log out</p>                           
+                            </a>
+                        </li>                     
+                        </ul>
                     </div>
-                        </a>
-                    <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
-                      <li>
-                        <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
-                            <div class="icon-size-sm">
-                                <i class="bi bi-envelope-fill"></i> 
-                            </div>
-                            <p class="menu-item-text">nhatthuthai@gmail.com</p>
-                    </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
-                                <div class="icon-size-sm">
-                                    <i class="bi bi-person-lines-fill"></i>
-                                </div>
-                                <p class="menu-item-text">Edit profile</p>   
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="login">
-                                <div class="icon-size-sm">
-                                    <i class="bi bi-door-open-fill"></i>
-                                </div>
-                                <p class="menu-item-text">Log out</p>                           
-                        </a>
-                    </li>                    
-                    </ul>
-                    </div>  
                 </div>
-                <!-- end dropdown user  -->
             </div> 
         </nav>
 
@@ -145,11 +141,11 @@
             <div class="container py-5">
                 <div class="row justify-content-center py-5">
                     <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">My Profile</h1>
+                        <h1 class="display-3 text-white animated slideInDown">Profile</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-center">
-                                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                                <li class="breadcrumb-item"><a href="userHome">Home</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
                             </ol>
                         </nav>
                     </div>
@@ -170,7 +166,7 @@
                 <img src="static/img/base_user.jpg"
                   alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                   style="width: 150px; z-index: 1">
-                  <a href="/edit_profile" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
+                  <a href="editProfile" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
                     Edit profile
                   </a>
               </div>

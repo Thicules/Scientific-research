@@ -88,61 +88,16 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a href="userHome" class="nav-item nav-link">Home</a>
-                    <a href="userAbout" class="nav-item nav-link">About</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Gallery</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="userAll" class="dropdown-item">All</a>
-                            <a href="userGood" class="dropdown-item">Good Road</a>
-                            <a href="userBad" class="dropdown-item">Bad Road</a>
-                        </div>
-                    </div>
-                    <a href="userContact" class="nav-item nav-link">Contact</a>
+                    <a href="home" class="nav-item nav-link">Home</a>
+                    <a href="about" class="nav-item nav-link">About</a>
+                    <a href="gallery" class="nav-item nav-link active">Gallery</a>
+                    <a href="contact" class="nav-item nav-link">Contact</a>
                 </div>
-               <!-- dropdown user  -->
-               <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
-                    <div class="dropdown ">
-                        <a
-                        href="#"
-                        role="button"
-                        id="dropdownMenuLink"
-                        data-mdb-toggle="dropdown"
-                        aria-expanded="false"
-                        >
-                        <div style="font-size: 2.5rem !important">
-                            <img class="avatar" src="static/img/base_user.jpg"/>                          
-                        </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
-                                    <div class="icon-size-sm">
-                                        <i class="bi bi-envelope-fill"></i> 
-                                    </div>
-                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
-                                    <div class="icon-size-sm">
-                                        <i class="bi bi-person-lines-fill"></i>
-                                    </div>
-                                    <p class="menu-item-text">Profile</p>   
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="login">
-                                    <div class="icon-size-sm">
-                                        <i class="bi bi-door-open-fill"></i>
-                                    </div>
-                                    <p class="menu-item-text">Log out</p>                           
-                            </a>
-                        </li>                     
-                        </ul>
+                <div class="d-flex flex-row gap-1 ml-auto align-items-center gap-md">
+                    <div>
+                        <a href="login" class="btn btn-primary rounded-pill py-2 px-4">Login</a>
                     </div>
                 </div>
-                <!--end drop down menu-->
             </div>
         </nav>
 
@@ -150,12 +105,11 @@
             <div class="container py-5">
                 <div class="row justify-content-center py-5">
                     <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">Recent photos</h1>
+                        <h1 class="display-3 text-white animated slideInDown">Gallery</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-center">
-                                <li class="breadcrumb-item"><a href="profile">Profile</a></li>
-                                <li class="breadcrumb-item"><a href="profile">Show all</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">Recent photos</li>
+                                <li class="breadcrumb-item"><a href="home">Home</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Gallery</li>
                             </ol>
                         </nav>
                     </div>
@@ -171,19 +125,20 @@
 <div class="container-xxl py-5 destination">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">My Upload</h6>
+            <h6 class="section-title bg-white text-center text-primary px-3">Gallery</h6>
             <h1 class="mb-5">Road Images</h1>
         </div>
         <div class="row g-3">
-            {% for image in image_data %}
+            {% for image_file in images %}
             <div class="col-lg-7 col-md-6">
                 <div class="d-flex align-items-center mb-5">
                     <div class="col-md-12 wow zoomIn mx-auto col-xl-9" data-wow-delay="0.3s">
                         <div class="image-map-container d-flex align-items-center">
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <div class="image-container">
-                                    <img src="{{ image['path'] }}" width="100%" style="max-width: 232px;">
+                                    <img src="{{ url_for('static', filename='images/' + image_file) }}" width="100%" style="max-width: 232px;">
                                 </div>
+                                <p>Result: {{ results[image_file] }}</p>
                             </a>
                         </div>
                     </div>
@@ -194,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}        
+            {% endfor %} 
         </div>   
     </div>
 </div>
@@ -202,13 +157,13 @@
 
 <!-- Đoạn mã JavaScript cho bản đồ -->
 <script>
-    {% for image in image_data %}
+    {% for image_file in images %}
     function initMap_{{ loop.index }}() {
-        // Lấy tọa độ từ image_data
-        const position = "{{ image['position'] }}";
-        const [lat, long] = position.split(",");
+        // Lấy tọa độ từ locations
+        const lat = {{ locations[image_file]['lat'] }};
+        const long = {{ locations[image_file]['long'] }};
         // Vị trí của bản đồ
-        const position_{{ loop.index }} = { lat: parseFloat(lat), lng: parseFloat(long) };
+        const position_{{ loop.index }} = { lat: lat, lng: long };
         // Khởi tạo bản đồ
         const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
             zoom: 12,

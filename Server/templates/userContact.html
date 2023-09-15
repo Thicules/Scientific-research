@@ -30,14 +30,6 @@
 
     <!-- Template Stylesheet -->
     <link href="static/css/style.css" rel="stylesheet">
-
-    <link rel="stylesheet" type="text/css" href="./style.css" />
-    <script type="module" src="./index.js"></script>
-
-<!-- Thêm đoạn mã CSS cho bản đồ -->
-<title>Add Map</title>
-<script src="https://maps.googleapis.com/maps/api/js"></script>
-
 </head>
 
 <body>
@@ -48,8 +40,7 @@
         </div>
     </div>
     <!-- Spinner End -->
-   
-
+ 
     <!-- Topbar Start -->
     <div class="container-fluid bg-custom px-5 py-2 d-none d-lg-block">
         <div class="row gx-0">
@@ -77,11 +68,13 @@
     <!-- Topbar End -->
 
 
+
     <!-- Navbar & Hero Start -->
     <div class="container-fluid position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
             <a href="" class="navbar-brand p-0">
-                <h1 class="text-light m-0"><i class="fa fa-map-marker-alt me-3"></i> Road Damage</h1>
+                <h1 class="text-primary m-0"><i class="fa fa-map-marker-alt me-3"></i>Road Damage</h1>
+                <!-- <img src="img/logo.png" alt="Logo"> -->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
@@ -98,24 +91,24 @@
                             <a href="userBad" class="dropdown-item">Bad Road</a>
                         </div>
                     </div>
-                    <a href="userContact" class="nav-item nav-link">Contact</a>
+                    <a href="userContact" class="nav-item nav-link active">Contact</a>
                 </div>
-               <!-- dropdown user  -->
-               <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
+                
+                <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
                     <div class="dropdown ">
                         <a
-                        href="#"
-                        role="button"
-                        id="dropdownMenuLink"
-                        data-mdb-toggle="dropdown"
-                        aria-expanded="false"
+                          href="#"
+                          role="button"
+                          id="dropdownMenuLink"
+                          data-mdb-toggle="dropdown"
+                          aria-expanded="false"
                         >
                         <div style="font-size: 2.5rem !important">
                             <img class="avatar" src="static/img/base_user.jpg"/>                          
                         </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
-                        <li>
+                          <li>
                             <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
@@ -142,20 +135,18 @@
                         </ul>
                     </div>
                 </div>
-                <!--end drop down menu-->
-            </div>
+            </div> 
         </nav>
 
         <div class="container-fluid bg-primary py-5 mb-5 hero-header">
             <div class="container py-5">
                 <div class="row justify-content-center py-5">
                     <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">Recent photos</h1>
+                        <h1 class="display-3 text-white animated slideInDown">Contact Us</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-center">
-                                <li class="breadcrumb-item"><a href="profile">Profile</a></li>
-                                <li class="breadcrumb-item"><a href="profile">Show all</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">Recent photos</li>
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
                             </ol>
                         </nav>
                     </div>
@@ -166,80 +157,50 @@
     <!-- Navbar & Hero End -->
 
 
-
-<!-- Images Start -->
-<div class="container-xxl py-5 destination">
-    <div class="container">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">My Upload</h6>
-            <h1 class="mb-5">Road Images</h1>
-        </div>
-        <div class="row g-3">
-            {% for image in image_data %}
-            <div class="col-lg-7 col-md-6">
-                <div class="d-flex align-items-center mb-5">
-                    <div class="col-md-12 wow zoomIn mx-auto col-xl-9" data-wow-delay="0.3s">
-                        <div class="image-map-container d-flex align-items-center">
-                            <a class="position-relative d-block overflow-hidden" href="">
-                                <div class="image-container">
-                                    <img src="{{ image['path'] }}" width="100%" style="max-width: 232px;">
-                                </div>
-                            </a>
-                        </div>
+    <!-- Contact Us Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="booking p-5">
+                <div class="row g-5 align-items-center">
+                    <div class="col-md-6 text-white">
+                        <h1 class="text-white mb-4">Contact Us</h1>
+                        <p class="mb-4">If you have any questions for us, you can send message from here!</p>
+                        <p class="mb-4">It's our pleasure to help you! </p>
+                        <a class="btn btn-outline-light py-3 px-5 mt-2" href="">Read More</a>
                     </div>
-                    <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
-                        <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
-                            <div class="google-map" id="map_{{ loop.index }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
-                        </div>
+                    <div class="col-md-6 text-white">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-transparent" id="name" placeholder="Your Name">
+                                        <label for="name">Your Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control bg-transparent" id="email" placeholder="Your Email">
+                                        <label for="email">Your Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control bg-transparent" placeholder="Message" id="message" style="height: 100px"></textarea>
+                                        <label for="message">Message</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-outline-light w-100 py-3" type="submit">SEND</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            {% endfor %}        
-        </div>   
+        </div>
     </div>
-</div>
-<!-- Images End -->
+    <!-- Contact Us Start -->
 
-<!-- Đoạn mã JavaScript cho bản đồ -->
-<script>
-    {% for image in image_data %}
-    function initMap_{{ loop.index }}() {
-        // Lấy tọa độ từ image_data
-        const position = "{{ image['position'] }}";
-        const [lat, long] = position.split(",");
-        // Vị trí của bản đồ
-        const position_{{ loop.index }} = { lat: parseFloat(lat), lng: parseFloat(long) };
-        // Khởi tạo bản đồ
-        const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
-            zoom: 12,
-            center: position_{{ loop.index }},
-        });
-        // Tạo info window chứa thông tin về tọa độ
-        const contentString_{{ loop.index }} = '<div id="content">'+
-          '<div id="siteNotice">'+
-          '</div>'+
-          '<h3 id="firstHeading" class="firstHeading">Location Details</h3>'+
-          '<div id="bodyContent">'+
-          '<p>Latitude: ' + lat + '</p>' +
-          '<p>Longitude: ' + long + '</p>' +
-          '</div>'+
-          '</div>';
-        const infowindow_{{ loop.index }} = new google.maps.InfoWindow({
-          content: contentString_{{ loop.index }}
-        });
-        // Đánh dấu vị trí trên bản đồ và gắn info window vào đánh dấu
-        const marker_{{ loop.index }} = new google.maps.Marker({
-            position: position_{{ loop.index }},
-            map: map_{{ loop.index }},
-            title: "Image location",
-        });
-        marker_{{ loop.index }}.addListener("click", () => {
-            infowindow_{{ loop.index }}.open(map_{{ loop.index }}, marker_{{ loop.index }});
-        });
-    }
-    initMap_{{ loop.index }}();
-    {% endfor %}
-</script>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -303,7 +264,6 @@
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                         &copy; <a class="border-bottom" href="#">IEC IoT 08</a>, All Right Reserved.
-
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <div class="footer-menu">
@@ -320,7 +280,6 @@
     <!-- Footer End -->
 
 
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 
@@ -328,13 +287,13 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="static/lib/wow/wow.min.js"></script>
+    <script src="static/lib/easing/easing.min.js"></script>
+    <script src="static/lib/waypoints/waypoints.min.js"></script>
+    <script src="static/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="static/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="static/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="static/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
     <!-- Template Javascript -->
     <script src="static/js/main.js"></script>

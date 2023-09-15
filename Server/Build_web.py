@@ -118,15 +118,31 @@ def upscale_image(image_path):
 
 @app.route('/home',methods=['GET', 'POST'])
 def home():
-    return render_template('userHome.html')
+    return render_template('index.html')
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/userHome',methods=['GET', 'POST'])
+def userHome():
+    return render_template('userHome.html')
+
+@app.route('/userAbout')
+def userAbout():
+    return render_template('userAbout.html')
+
+@app.route('/userContact')
+def userContact():
+    return render_template('userContact.html')
 
 @app.route('/userPics')
 def userPics():
@@ -160,9 +176,9 @@ def profile():
     # Render mẫu 'profile.html' với danh sách đường dẫn hình ảnh
     return render_template('profile.html', image_paths=image_paths)
 
-@app.route('/edit_profile')
-def edit_profile():
-    return render_template('edit_profile.html')
+@app.route('/editProfile')
+def editProfile():
+    return render_template('editProfile.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
@@ -225,7 +241,7 @@ def upload_image():
     # Trả về kết quả và địa chỉ của địa điểm
     return res, location_str
 
-@app.route('/all')
+@app.route('/userAll')
 def show_all():
     images = []
     results = {}
@@ -242,7 +258,7 @@ def show_all():
                 lat = long = lat_long
             locations[filename] = {'lat': lat, 'long': long}
 
-    return render_template('all.html', images=images, results=results, locations=locations)
+    return render_template('userAll.html', images=images, results=results, locations=locations)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
