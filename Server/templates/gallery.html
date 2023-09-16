@@ -34,6 +34,11 @@
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <script type="module" src="./index.js"></script>
 
+      <!-- Các tệp CSS và JavaScript của Leaflet -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
 <!-- Thêm đoạn mã CSS cho bản đồ -->
 <title>Add Map</title>
 <script src="https://maps.googleapis.com/maps/api/js"></script>
@@ -125,8 +130,8 @@
 <div class="container-xxl py-5 destination">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Gallery</h6>
-            <h1 class="mb-5">Road Images</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">Road Images</h6>
+            <h1 class="mb-5">Example</h1>
         </div>
         <div class="row g-3">
             {% for image_file in images %}
@@ -155,48 +160,15 @@
 </div>
 <!-- Images End -->
 
-<!-- Đoạn mã JavaScript cho bản đồ -->
-<script>
-    {% for image_file in images %}
-    function initMap_{{ loop.index }}() {
-        // Lấy tọa độ từ locations
-        const lat = {{ locations[image_file]['lat'] }};
-        const long = {{ locations[image_file]['long'] }};
-        // Vị trí của bản đồ
-        const position_{{ loop.index }} = { lat: lat, lng: long };
-        // Khởi tạo bản đồ
-        const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
-            zoom: 12,
-            center: position_{{ loop.index }},
-        });
-        // Tạo info window chứa thông tin về tọa độ
-        const contentString_{{ loop.index }} = '<div id="content">'+
-          '<div id="siteNotice">'+
-          '</div>'+
-          '<h3 id="firstHeading" class="firstHeading">Location Details</h3>'+
-          '<div id="bodyContent">'+
-          '<p>Latitude: ' + lat + '</p>' +
-          '<p>Longitude: ' + long + '</p>' +
-          '</div>'+
-          '</div>';
-        const infowindow_{{ loop.index }} = new google.maps.InfoWindow({
-          content: contentString_{{ loop.index }}
-        });
-        // Đánh dấu vị trí trên bản đồ và gắn info window vào đánh dấu
-        const marker_{{ loop.index }} = new google.maps.Marker({
-            position: position_{{ loop.index }},
-            map: map_{{ loop.index }},
-            title: "Image location",
-        });
-        marker_{{ loop.index }}.addListener("click", () => {
-            infowindow_{{ loop.index }}.open(map_{{ loop.index }}, marker_{{ loop.index }});
-        });
-    }
-    initMap_{{ loop.index }}();
-    {% endfor %}
-</script>
+<!--Start example map-->
+<div class="center">
+    <img src="https://watermark.lovepik.com/photo/20211130/large/lovepik-winding-road-picture_501282965.jpg" width="700" height="450" frameborder="0" style="border:0" allowfullscreen></img>
+    <!-- Phần tử chứa bản đồ -->
+    <div id="map" style="width: 700px; height: 450px;"></div></div>
+<!--End example map-->
 
-    <!-- Footer Start -->
+
+<!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
@@ -293,6 +265,23 @@
 
     <!-- Template Javascript -->
     <script src="static/js/main.js"></script>
+
+    <!-- Đoạn mã JavaScript cho bản đồ -->
+    <script>
+        // Tạo bản đồ và đặt tọa độ ban đầu và mức thu phóng
+        var map = L.map('map').setView([51.505, -0.09], 13);
+    
+        // Thêm lớp bản đồ OpenStreetMap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        // Thêm đánh dấu và cửa sổ thông báo popup
+        L.marker([11.94446627102782, 108.45876308642964]).addTo(map)
+            .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+            .openPopup();
+    </script>
+    
 </body>
 
 </html>

@@ -659,3 +659,14 @@ form input[type="file"] {
  }
 
 
+/*** Page map example ***/
+ .center {
+    position: center;
+    display: flex;
+    align-items: flex-start;
+    gap: 50px; /* Khoảng cách giữa ảnh và bản đồ */
+    justify-content: center;
+}
+
+
+
