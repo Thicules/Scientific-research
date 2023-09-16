@@ -163,10 +163,18 @@
         <div class="card h-100">
             <div class="card-body">
                 <div class="account-settings">
+                    
                     <div class="user-profile">
-                        <div class="user-avatar">
-                            <img src="static/img/base_user.jpg" alt="Avatar">
-                        </div>
+                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                            <label for="fileToUpload">
+                          <div class="profile-pic" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsRbXX7Dm04_2jUjdrhlKQsslNAhV13uejXOTR6oAKecH-l5cRJ4JqVj_4opmi1KblWvw&usqp=CAU')">
+                              <span class="glyphicon glyphicon-camera"></span>
+                              <span>Change Image</span>
+                          </div>
+                          </label>
+                          <input type="File" name="fileToUpload" id="fileToUpload">
+                        </form>
+                        <script src="avtUpload.js"></script>
                         <h5 class="user-name">My full name</h5>
                         <h6 class="user-email">myemail@gmail.com.com</h6>
                     </div>
