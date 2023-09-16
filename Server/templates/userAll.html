@@ -38,6 +38,12 @@
 <title>Add Map</title>
 <script src="https://maps.googleapis.com/maps/api/js"></script>
 
+<!-- Các tệp CSS và JavaScript của Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
+
 </head>
 
 <body>
@@ -200,7 +206,9 @@
 </div>
 <!-- Images End -->
 
-<!-- Đoạn mã JavaScript cho bản đồ -->
+
+
+<!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
 <script>
     {% for image_file in images %}
     function initMap_{{ loop.index }}() {
@@ -208,35 +216,23 @@
         const lat = {{ locations[image_file]['lat'] }};
         const long = {{ locations[image_file]['long'] }};
         // Vị trí của bản đồ
-        const position_{{ loop.index }} = { lat: lat, lng: long };
+        const position_{{ loop.index }} = [lat, long];
         // Khởi tạo bản đồ
-        const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
-            zoom: 12,
+        const mapOptions_{{ loop.index }} = {
             center: position_{{ loop.index }},
-        });
-        // Tạo info window chứa thông tin về tọa độ
-        const contentString_{{ loop.index }} = '<div id="content">'+
-          '<div id="siteNotice">'+
-          '</div>'+
-          '<h3 id="firstHeading" class="firstHeading">Location Details</h3>'+
-          '<div id="bodyContent">'+
-          '<p>Latitude: ' + lat + '</p>' +
-          '<p>Longitude: ' + long + '</p>' +
-          '</div>'+
-          '</div>';
-        const infowindow_{{ loop.index }} = new google.maps.InfoWindow({
-          content: contentString_{{ loop.index }}
-        });
-        // Đánh dấu vị trí trên bản đồ và gắn info window vào đánh dấu
-        const marker_{{ loop.index }} = new google.maps.Marker({
-            position: position_{{ loop.index }},
-            map: map_{{ loop.index }},
-            title: "Image location",
-        });
-        marker_{{ loop.index }}.addListener("click", () => {
-            infowindow_{{ loop.index }}.open(map_{{ loop.index }}, marker_{{ loop.index }});
-        });
+            zoom: 12,
+        };
+        const map_{{ loop.index }} = L.map("map_{{ loop.index }}", mapOptions_{{ loop.index }});
+        // Thêm lớp bản đồ từ OpenStreetMap
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map_{{ loop.index }});
+        // Đánh dấu vị trí trên bản đồ
+        L.marker(position_{{ loop.index }}).addTo(map_{{ loop.index }})
+            .bindPopup("Image location: Latitude " + lat + ", Longitude " + long)
+            .openPopup();
     }
+    // Gọi hàm initMap_{{ loop.index }} cho từng hình ảnh
     initMap_{{ loop.index }}();
     {% endfor %}
 </script>
