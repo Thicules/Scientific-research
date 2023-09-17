@@ -180,16 +180,16 @@
             <h1 class="mb-5">Road Images</h1>
         </div>
         <div class="row g-3">
-            {% for image_file in images %}
+            {% for image in image_all %}
             <div class="col-lg-7 col-md-6">
                 <div class="d-flex align-items-center mb-5">
                     <div class="col-md-12 wow zoomIn mx-auto col-xl-9" data-wow-delay="0.3s">
                         <div class="image-map-container d-flex align-items-center">
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <div class="image-container">
-                                    <img src="{{ url_for('static', filename='images/' + image_file) }}" width="100%" style="max-width: 232px;">
+                                    <img src="{{ image['path'] }}" alt="Image" width="100%" style="max-width: 232px;">
                                 </div>
-                                <p>Result: {{ results[image_file] }}</p>
+                                <p>Result: {{ image['result'] }}</p>
                             </a>
                         </div>
                     </div>
@@ -210,11 +210,11 @@
 
 <!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
 <script>
-    {% for image_file in images %}
+    {% for image in image_all %}
     function initMap_{{ loop.index }}() {
-        // Lấy tọa độ từ locations
-        const lat = {{ locations[image_file]['lat'] }};
-        const long = {{ locations[image_file]['long'] }};
+        // Lấy tọa độ từ image_all
+        const position = "{{ image['position'] }}";
+        const [lat, long] = position.split(",");
         // Vị trí của bản đồ
         const position_{{ loop.index }} = [lat, long];
         // Khởi tạo bản đồ

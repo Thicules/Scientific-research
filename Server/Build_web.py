@@ -34,7 +34,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'default secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '21522648'
+app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'weblogin'
  
 mysql = MySQL(app)
@@ -149,13 +149,13 @@ def userPics():
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ cơ sở dữ liệu dựa trên người dùng hiện tại
     user_id = session['id']  # Lấy id người dùng từ session
     cur = mysql.connection.cursor()
-    query = "SELECT path, position FROM images WHERE user_id = %s"
+    query = "SELECT path, position, result FROM images WHERE user_id = %s"
     cur.execute(query, (user_id,))
     results = cur.fetchall()
     cur.close()
 
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
-    image_data = [{'path': result[0], 'position': result[1]} for result in results]
+    image_data = [{'path': result[0], 'position': result[1], 'result': result[2]} for result in results]
 
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userPics.html', image_data=image_data)
@@ -219,23 +219,19 @@ def upload_image():
 
     # Lưu tập tin ảnh vào thư mục static/images trên server
     filename = secure_filename(file.filename)
-    file_path = os.path.join('static', 'images', filename)
+    file_path = os.path.join('static', 'images', 'road', filename)
     file.save(file_path)
 
     # Tăng độ phân giải ảnh
     sr_img = upscale_image(file_path)
     sr_img.save(file_path)
 
-    # Chạy model và đổi tên tệp tin ảnh thành dạng filename_res_location
+    # Chạy model
     res = animal(file_path)
-    res_str = res.replace(' ', '_')
-    new_filename = f'{os.path.splitext(filename)[0]}_{res_str}_{latitude},{longitude}{os.path.splitext(filename)[1]}'
-    new_file_path = os.path.join('static', 'images', new_filename)
-    os.rename(file_path, new_file_path)
 
     # Lưu thông tin ảnh vào cơ sở dữ liệu
-    cursor.execute("INSERT INTO images (user_id, position, upload_date, path) VALUES (%s, %s, %s, %s)",
-                (account['id'], f"{latitude},{longitude}", datetime.now().date(), new_file_path))
+    cursor.execute("INSERT INTO images (user_id, namepics, result, position, upload_date, path) VALUES (%s, %s, %s, %s, %s, %s)",
+                (account['id'], filename, res, f"{latitude},{longitude}", datetime.now().date(), file_path))
     mysql.connection.commit()
 
     # Trả về kết quả và địa chỉ của địa điểm
@@ -243,22 +239,19 @@ def upload_image():
 
 @app.route('/userAll')
 def show_all():
-    images = []
-    results = {}
-    locations = {}
-    for filename in os.listdir(os.path.join('static', 'images')):
-        if allowed_file(filename):
-            images.append(filename)
-            res = os.path.splitext(filename)[0].split('_')[-2]
-            results[filename] = res
-            lat_long = os.path.splitext(filename)[0].split('_')[-1]
-            if ',' in lat_long:
-                lat, long = lat_long.split(',')
-            else:
-                lat = long = lat_long
-            locations[filename] = {'lat': lat, 'long': long}
 
-    return render_template('userAll.html', images=images, results=results, locations=locations)
+    cursor = mysql.connection.cursor()
+
+    # Truy vấn dữ liệu từ cơ sở dữ liệu
+    cursor.execute("SELECT result, position, path FROM images")
+    results = cursor.fetchall()
+    cursor.close()
+
+    # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
+    image_all = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
+    
+    # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
+    return render_template('userAll.html', image_all=image_all)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
