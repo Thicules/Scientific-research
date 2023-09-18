@@ -33,13 +33,14 @@
 </head>
 
 <body>
-<!-- Spinner Start -->
+    <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
     <!-- Spinner End -->
+ 
     <!-- Topbar Start -->
     <div class="container-fluid bg-custom px-5 py-2 d-none d-lg-block">
         <div class="row gx-0">
@@ -66,6 +67,8 @@
     </div>
     <!-- Topbar End -->
 
+
+
     <!-- Navbar & Hero Start -->
     <div class="container-fluid position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
@@ -78,14 +81,57 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0">
-                    <a href="home" class="nav-item nav-link">Home</a>
-                    <a href="about" class="nav-item nav-link">About</a>
-                    <a href="gallery" class="nav-item nav-link">Gallery</a>
-                    <a href="contact" class="nav-item nav-link active">Contact</a>
+                    <a href="userHome" class="nav-item nav-link">Home</a>
+                    <a href="userAbout" class="nav-item nav-link">About</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Gallery</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="userAll" class="dropdown-item">All</a>
+                            <a href="userGood" class="dropdown-item">Good Road</a>
+                            <a href="userBad" class="dropdown-item">Bad Road</a>
+                        </div>
+                    </div>
+                    <a href="userContact" class="nav-item nav-link">Contact</a>
                 </div>
-                <div class="d-flex flex-row gap-1 ml-auto align-items-center gap-md">
-                    <div>
-                        <a href="login" class="btn btn-primary rounded-pill py-2 px-4">Login</a>
+                <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
+                    <div class="dropdown ">
+                        <a
+                          href="#"
+                          role="button"
+                          id="dropdownMenuLink"
+                          data-mdb-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                        <div style="font-size: 2.5rem !important">
+                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
+                          <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-envelope-fill"></i> 
+                                    </div>
+                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-person-lines-fill"></i>
+                                    </div>
+                                    <p class="menu-item-text">Profile</p>   
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="login">
+                                    <div class="icon-size-sm">
+                                        <i class="bi bi-door-open-fill"></i>
+                                    </div>
+                                    <p class="menu-item-text">Log out</p>                           
+                            </a>
+                        </li>                     
+                        </ul>
                     </div>
                 </div>
             </div> 
@@ -95,11 +141,11 @@
             <div class="container py-5">
                 <div class="row justify-content-center py-5">
                     <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">Contact Us</h1>
+                        <h1 class="display-3 text-white animated slideInDown">Profile</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-center">
-                                <li class="breadcrumb-item"><a href="home">Home</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                                <li class="breadcrumb-item"><a href="userHome">Home</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Profile</li>
                             </ol>
                         </nav>
                     </div>
@@ -109,50 +155,86 @@
     </div>
     <!-- Navbar & Hero End -->
 
-
-    <!-- Contact Us Start -->
-    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-        <div class="container">
-            <div class="booking p-5">
-                <div class="row g-5 align-items-center">
-                    <div class="col-md-6 text-white">
-                        <h1 class="text-white mb-4">Contact Us</h1>
-                        <p class="mb-4">If you have any questions for us, you can send message from here!</p>
-                        <p class="mb-4">It's our pleasure to help you! </p>
-                        <a class="btn btn-outline-light py-3 px-5 mt-2" href="">Read More</a>
-                    </div>
-                    <div class="col-md-6 text-white">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control bg-transparent" id="name" placeholder="Your Name">
-                                        <label for="name">Your Name</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control bg-transparent" id="email" placeholder="Your Email">
-                                        <label for="email">Your Email</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control bg-transparent" placeholder="Message" id="message" style="height: 100px"></textarea>
-                                        <label for="message">Message</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-outline-light w-100 py-3" type="submit">SEND</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+   <!--Start Profile-->
+   <section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-9 col-xl-7">
+          <div class="card">
+            <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+              <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                <img src="static/img/base_user.jpg"
+                  alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                  style="width: 150px; z-index: 1">
+                  <a href="editProfile" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
+                    Edit profile
+                  </a>
+              </div>
+              <div class="ms-3" style="margin-top: 130px;">
+                <h5>Andy Horwitz</h5>
+                <p>New York</p>
+              </div>
+            </div>
+            <div class="p-4 text-black" style="background-color: #f8f9fa;">
+              <div class="d-flex justify-content-end text-center py-1">
+                <div>
+                  <p class="mb-1 h5">253</p>
+                  <p class="small text-muted mb-0">Photos</p>
+                </div>
+                <div class="px-3">
+                  <p class="mb-1 h5">1026</p>
+                  <p class="small text-muted mb-0">Followers</p>
+                </div>
+                <div>
+                  <p class="mb-1 h5">478</p>
+                  <p class="small text-muted mb-0">Following</p>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-4 text-black">
+              <div class="mb-5">
+                <p class="lead fw-normal mb-1">About</p>
+                <div class="p-4" style="background-color: #f8f9fa;">
+                  <p class="font-italic mb-1">Web Developer</p>
+                  <p class="font-italic mb-1">Lives in New York</p>
+                  <p class="font-italic mb-0">Photographer</p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="lead fw-normal mb-0">Recent photos</p>
+                <p class="mb-0"><a href="userPics" class="text-muted">Show all</a></p>
+              </div>
+              <div class="row g-2">
+                <div class="col mb-2">
+                    {% if image_paths|length > 0 %}
+                        <img src="{{ image_paths[0] }}" alt="image" class="w-100 rounded-3">
+                    {% endif %}
+                </div>
+                <div class="col mb-2">
+                    {% if image_paths|length > 1 %}
+                        <img src="{{ image_paths[1] }}" alt="image" class="w-100 rounded-3">
+                    {% endif %}
                 </div>
             </div>
+            <div class="row g-2">
+                <div class="col">
+                    {% if image_paths|length > 2 %}
+                        <img src="{{ image_paths[2] }}" alt="image" class="w-100 rounded-3">
+                    {% endif %}
+                </div>
+                <div class="col">
+                    {% if image_paths|length > 3 %}
+                        <img src="{{ image_paths[3] }}" alt="image" class="w-100 rounded-3">
+                    {% endif %}
+                </div>
+            </div>
+            </div>  
+          </div>
         </div>
+      </div>
     </div>
-    <!-- Contact Us Start -->
+  </section>
+    <!--End profile-->
 
 
     <!-- Footer Start -->
