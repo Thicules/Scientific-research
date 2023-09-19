@@ -37,6 +37,13 @@
 <!-- Thêm đoạn mã CSS cho bản đồ -->
 <title>Add Map</title>
 <script src="https://maps.googleapis.com/maps/api/js"></script>
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- Các tệp CSS và JavaScript của Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
 
 </head>
 
@@ -183,8 +190,10 @@
                                     <img src="{{ image['path'] }}" width="100%" style="max-width: 232px;">
                                 </div>
                                 <p>Result: {{ image['result'] }}</p>
-                            </a>
+                            </a>                           
                         </div>
+                        <button class="userbtn"><i class="fa fa-trash"></i> Delete</button>
+                        <button class="userbtn"><i class="bi bi-geo-alt-fill"></i>Edit</button>
                     </div>
                     <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
                         <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
@@ -199,7 +208,7 @@
 </div>
 <!-- Images End -->
 
-<!-- Đoạn mã JavaScript cho bản đồ -->
+<!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
 <script>
     {% for image in image_data %}
     function initMap_{{ loop.index }}() {
@@ -207,38 +216,27 @@
         const position = "{{ image['position'] }}";
         const [lat, long] = position.split(",");
         // Vị trí của bản đồ
-        const position_{{ loop.index }} = { lat: parseFloat(lat), lng: parseFloat(long) };
+        const position_{{ loop.index }} = [lat, long];
         // Khởi tạo bản đồ
-        const map_{{ loop.index }} = new google.maps.Map(document.getElementById("map_{{ loop.index }}"), {
-            zoom: 12,
+        const mapOptions_{{ loop.index }} = {
             center: position_{{ loop.index }},
-        });
-        // Tạo info window chứa thông tin về tọa độ
-        const contentString_{{ loop.index }} = '<div id="content">'+
-          '<div id="siteNotice">'+
-          '</div>'+
-          '<h3 id="firstHeading" class="firstHeading">Location Details</h3>'+
-          '<div id="bodyContent">'+
-          '<p>Latitude: ' + lat + '</p>' +
-          '<p>Longitude: ' + long + '</p>' +
-          '</div>'+
-          '</div>';
-        const infowindow_{{ loop.index }} = new google.maps.InfoWindow({
-          content: contentString_{{ loop.index }}
-        });
-        // Đánh dấu vị trí trên bản đồ và gắn info window vào đánh dấu
-        const marker_{{ loop.index }} = new google.maps.Marker({
-            position: position_{{ loop.index }},
-            map: map_{{ loop.index }},
-            title: "Image location",
-        });
-        marker_{{ loop.index }}.addListener("click", () => {
-            infowindow_{{ loop.index }}.open(map_{{ loop.index }}, marker_{{ loop.index }});
-        });
+            zoom: 12,
+        };
+        const map_{{ loop.index }} = L.map("map_{{ loop.index }}", mapOptions_{{ loop.index }});
+        // Thêm lớp bản đồ từ OpenStreetMap
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map_{{ loop.index }});
+        // Đánh dấu vị trí trên bản đồ
+        L.marker(position_{{ loop.index }}).addTo(map_{{ loop.index }})
+            .bindPopup("Image location: Latitude " + lat + ", Longitude " + long)
+            .openPopup();
     }
+    // Gọi hàm initMap_{{ loop.index }} cho từng hình ảnh
     initMap_{{ loop.index }}();
     {% endfor %}
 </script>
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
