@@ -3,12 +3,14 @@ import requests
 from PIL import Image
 import io
 import os
-import googlemaps
-import cv2
 import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/Nhat Thu/Downloads/meomeo.jpg'
+image_path = 'C:/Users/Nhat Thu/Downloads/gaugau.jpg'
+
+#Thông tin user
+username = "nhatthu"
+password = "Thainhatthu78"
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
@@ -26,7 +28,7 @@ with open(image_path, 'rb') as f:
 
 # Chuẩn bị dữ liệu để gửi yêu cầu POST đến server
 files = {'image': (filename, image_bytes, 'image/jpeg')}
-data = {'latitude': latitude, 'longitude': longitude}
+data = {'latitude': latitude, 'longitude': longitude, 'username': username, 'password': password}
 
 # Gửi yêu cầu POST đến server
 response = requests.post(server_url, files=files, data=data)
