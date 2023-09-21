@@ -69,53 +69,35 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-@app.route('/register', methods =['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address !'
+
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):
             msg = 'Username must contain only characters and numbers!'
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, email, password, ))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+            account = cursor.fetchone()
+            if account:
+                msg = 'Account already exists!'
+            else:
+                cursor.execute('INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)', (username, email, password))
+                mysql.connection.commit()
+                msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('login.html', msg = msg)
+    
+    return render_template('login.html', msg=msg)
  
-# Xử lý yêu cầu đăng ảnh lên máy chủ web
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Hàm tăng độ phân giải ảnh
-def upscale_image(image_path):
-    # Đọc ảnh
-    img = Image.open(image_path)
-    # Chuẩn bị model tăng độ phân giải (SRGAN)
-    rrdn = RRDN(weights='gans')
-
-    # Tiến hành tăng độ phân giải
-    sr_img = rrdn.predict(np.array(img))
-
-    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
-    sr_img = Image.fromarray(sr_img)
-
-    return sr_img
-
 @app.route('/home',methods=['GET', 'POST'])
 def home():
     return render_template('index.html')
@@ -190,6 +172,32 @@ def editProfile():
 
 @app.route('/ava', methods=['POST'])
 def upload():
+    
+    return redirect('/editProfile')
+
+# Xử lý yêu cầu đăng ảnh lên máy chủ web
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Hàm tăng độ phân giải ảnh
+def upscale_image(image_path):
+    # Đọc ảnh
+    img = Image.open(image_path)
+    # Chuẩn bị model tăng độ phân giải (SRGAN)
+    rrdn = RRDN(weights='gans')
+
+    # Tiến hành tăng độ phân giải
+    sr_img = rrdn.predict(np.array(img))
+
+    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
+    sr_img = Image.fromarray(sr_img)
+
+    return sr_img
+
+@app.route('/update', methods=['POST'])
+def update():
     if 'fileToUpload' not in request.files:
         return "No file uploaded"
 
@@ -198,17 +206,15 @@ def upload():
         return "No file selected"
 
     target_dir = 'static/images/avatar/'
-    target_file = target_dir + file.filename
-    allowed_extensions = {'jpg', 'jpeg', 'png'}
+    user_id = session.get('id')  # Lấy ID người dùng từ session
 
-    if file.filename.split('.')[-1].lower() not in allowed_extensions:
-        return "Invalid image format. Only JPG, JPEG, and PNG files are allowed."
+    target_file = target_dir + f"user_{user_id}.jpg"  # Đặt tên tệp hình ảnh với user_id
+
+    if not allowed_file(file.filename):
+        return 'Invalid file type.', 400
 
     file.save(target_file)
-    return redirect('/editProfile')
-
-@app.route('/update', methods=['POST'])
-def update():
+    
     # Nhận dữ liệu từ biểu mẫu HTML và cập nhật thông tin người dùng vào cơ sở dữ liệu
     full_name = request.form['fullName']
     gender = request.form['gender']

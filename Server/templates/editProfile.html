@@ -165,19 +165,14 @@
                 <div class="account-settings">
                     
                     <div class="user-profile">
-                        <form action="/ava" method="post" enctype="multipart/form-data">
-                            <label for="fileToUpload">
-                                <div id="profilePic" class="profile-pic">
-                                    <input type="file" name="fileToUpload" id="fileToUpload" onchange="loadFile(event)" style="display: none;">
-                                    <img src="static/img/base_user.jpg" id="output" width="200">
-                                    <span class="change-image">
-                                        <span class="glyphicon glyphicon-camera"></span>
-                                        <span>Change Image</span>
-                                    </span>
-                                </div>
-                            </label>
-                            <input type="submit" value="Open" style="display: none;">
-                        </form>
+                        <div class="avatar-wrapper">
+                            <img class="profile-pic" src="static/img/base_user.jpg" />
+                            <div class="upload-button">
+                                <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                            </div>
+                            <input class="file-upload" type="file" accept="image/*"/>
+                        </div>
+                        
                         <h5 class="user-name">My full name</h5>
                         <h6 class="user-email">myemail@gmail.com</h6>
                     </div>
@@ -358,6 +353,7 @@
 
     <!-- Template Javascript -->
     <script src="static/js/main.js"></script>
+    <script src="static/js/avtUpload.js"></script>
 </body>
 
 </html>
