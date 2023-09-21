@@ -165,19 +165,23 @@
                 <div class="account-settings">
                     
                     <div class="user-profile">
-                        <form action="upload.php" method="post" enctype="multipart/form-data">
+                        <form action="/ava" method="post" enctype="multipart/form-data">
                             <label for="fileToUpload">
-                          <div class="profile-pic" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsRbXX7Dm04_2jUjdrhlKQsslNAhV13uejXOTR6oAKecH-l5cRJ4JqVj_4opmi1KblWvw&usqp=CAU')">
-                              <span class="glyphicon glyphicon-camera"></span>
-                              <span>Change Image</span>
-                          </div>
-                          </label>
-                          <input type="File" name="fileToUpload" id="fileToUpload">
+                                <div id="profilePic" class="profile-pic">
+                                    <input type="file" name="fileToUpload" id="fileToUpload" onchange="loadFile(event)" style="display: none;">
+                                    <img src="static/img/base_user.jpg" id="output" width="200">
+                                    <span class="change-image">
+                                        <span class="glyphicon glyphicon-camera"></span>
+                                        <span>Change Image</span>
+                                    </span>
+                                </div>
+                            </label>
+                            <input type="submit" value="Open" style="display: none;">
                         </form>
-                        <script src="avtUpload.js"></script>
                         <h5 class="user-name">My full name</h5>
-                        <h6 class="user-email">myemail@gmail.com.com</h6>
+                        <h6 class="user-email">myemail@gmail.com</h6>
                     </div>
+                    
                     <div class="about">
                         <h5>About</h5>
                         <p>Hello, I am the owner of the road damage detection system.</p>
@@ -201,8 +205,8 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="form-group">
-                            <label for="eMail">Gender</label>
-                            <input type="email" class="form-control" id="eMail" placeholder="Male/Female">
+                            <label for="gender">Gender</label>
+                            <input type="gender" class="form-control" id="gender" placeholder="Male/Female">
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -242,8 +246,8 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                         <div class="form-group">
-                            <label for="zIp">Email</label>
-                            <input type="text" class="form-control" id="zIp" placeholder="Enter your email">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" id="email" placeholder="Enter your email">
                         </div>
                     </div>
                 </div>
@@ -251,7 +255,7 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="text-right">
                             <a href="profile" id="submit" name="submit" class="btn btn-secondary">Cancel</a>
-                            <button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
+                            <a href="update" id="submit" name="submit" class="btn btn-primary">Update</a>
                         </div>
                     </div>
                 </div>
@@ -259,7 +263,7 @@
         </div>
         </div>
         </div>
-        </div>
+    </div>
     <!--End profile-->
 
 

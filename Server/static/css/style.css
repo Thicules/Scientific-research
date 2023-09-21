@@ -624,40 +624,40 @@ body {
 
 /*** edit avatar ***/
 
-.profile-pic {
-    border-radius: 50%;
-    height: 150px;
-    width: 150px;
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    vertical-align: middle;
+.user-profile {
     text-align: center;
-    color: transparent;
-    transition: all .3s ease;
-    text-decoration: none;
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.change-image {
+    display: none;
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 5px;
     cursor: pointer;
 }
 
-.profile-pic:hover {
-    background-color: rgba(0,0,0,.5);
-    z-index: 10000;
-    color: #fff;
-    transition: all .3s ease;
-    text-decoration: none;
+.profile-pic:hover .change-image {
+    display: block;
 }
-
-.profile-pic span {
-    display: inline-block;
-    padding-top: 4.5em;
-    padding-bottom: 4.5em;
-}
-
-form input[type="file"] {
-          display: none;
-          cursor: pointer;
- }
-
 
 /*** Page map example ***/
  .center {

@@ -34,7 +34,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'default secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '21522648'
+app.config['MYSQL_PASSWORD'] = '123456'
 app.config['MYSQL_DB'] = 'weblogin'
  
 mysql = MySQL(app)
@@ -178,7 +178,54 @@ def profile():
 
 @app.route('/editProfile')
 def editProfile():
-    return render_template('editProfile.html')
+    # Thực hiện truy vấn SQL để lấy thông tin người dùng từ cơ sở dữ liệu
+    user_id = session['id']  # ID người dùng cần lấy thông tin
+    cur = mysql.connection.cursor()
+    query = "SELECT * FROM users WHERE id = %s"
+    cur.execute(query, (user_id,))
+    user_data = cur.fetchone()
+
+    # Trả về template HTML và truyền dữ liệu người dùng vào template
+    return render_template('editProfile.html', user_data=user_data)
+
+@app.route('/ava', methods=['POST'])
+def upload():
+    if 'fileToUpload' not in request.files:
+        return "No file uploaded"
+
+    file = request.files['fileToUpload']
+    if file.filename == '':
+        return "No file selected"
+
+    target_dir = 'static/images/avatar/'
+    target_file = target_dir + file.filename
+    allowed_extensions = {'jpg', 'jpeg', 'png'}
+
+    if file.filename.split('.')[-1].lower() not in allowed_extensions:
+        return "Invalid image format. Only JPG, JPEG, and PNG files are allowed."
+
+    file.save(target_file)
+    return redirect('/editProfile')
+
+@app.route('/update', methods=['POST'])
+def update():
+    # Nhận dữ liệu từ biểu mẫu HTML và cập nhật thông tin người dùng vào cơ sở dữ liệu
+    full_name = request.form['fullName']
+    gender = request.form['gender']
+    phone = request.form['phone']
+    date_of_birth = request.form['date']
+    street = request.form['Street']
+    city = request.form['ciTy']
+    state = request.form['sTate']
+    email = request.form['email']
+    
+    # Thực hiện truy vấn SQL để cập nhật thông tin người dùng vào cơ sở dữ liệu
+    user_id = session['id']  # ID người dùng cần lấy thông tin
+    query = "UPDATE users SET full_name = %s, gender = %s, phone = %s, date_of_birth = %s, street = %s, city = %s, state = %s, email = %s WHERE id = %s"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (full_name, gender, phone, date_of_birth, street, city, state, email, user_id))
+    mysql.connection.commit()
+    return redirect('/profile')
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
