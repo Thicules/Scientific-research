@@ -69,53 +69,35 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
 
-@app.route('/register', methods =['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     msg = ''
-    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form :
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s', (username, ))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address !'
+
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):
             msg = 'Username must contain only characters and numbers!'
         elif not username or not password or not email:
             msg = 'Please fill out the form!'
         else:
-            cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, email, password, ))
-            mysql.connection.commit()
-            msg = 'You have successfully registered!'
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+            account = cursor.fetchone()
+            if account:
+                msg = 'Account already exists!'
+            else:
+                cursor.execute('INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)', (username, email, password))
+                mysql.connection.commit()
+                msg = 'You have successfully registered!'
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
-    return render_template('login.html', msg = msg)
+    
+    return render_template('login.html', msg=msg)
  
-# Xử lý yêu cầu đăng ảnh lên máy chủ web
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Hàm tăng độ phân giải ảnh
-def upscale_image(image_path):
-    # Đọc ảnh
-    img = Image.open(image_path)
-    # Chuẩn bị model tăng độ phân giải (SRGAN)
-    rrdn = RRDN(weights='gans')
-
-    # Tiến hành tăng độ phân giải
-    sr_img = rrdn.predict(np.array(img))
-
-    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
-    sr_img = Image.fromarray(sr_img)
-
-    return sr_img
-
 @app.route('/home',methods=['GET', 'POST'])
 def home():
     return render_template('index.html')
@@ -178,7 +160,78 @@ def profile():
 
 @app.route('/editProfile')
 def editProfile():
-    return render_template('editProfile.html')
+    # Thực hiện truy vấn SQL để lấy thông tin người dùng từ cơ sở dữ liệu
+    user_id = session['id']  # ID người dùng cần lấy thông tin
+    cur = mysql.connection.cursor()
+    query = "SELECT * FROM users WHERE id = %s"
+    cur.execute(query, (user_id,))
+    user_data = cur.fetchone()
+
+    # Trả về template HTML và truyền dữ liệu người dùng vào template
+    return render_template('editProfile.html', user_data=user_data)
+
+@app.route('/ava', methods=['POST'])
+def upload():
+    
+    return redirect('/editProfile')
+
+# Xử lý yêu cầu đăng ảnh lên máy chủ web
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Hàm tăng độ phân giải ảnh
+def upscale_image(image_path):
+    # Đọc ảnh
+    img = Image.open(image_path)
+    # Chuẩn bị model tăng độ phân giải (SRGAN)
+    rrdn = RRDN(weights='gans')
+
+    # Tiến hành tăng độ phân giải
+    sr_img = rrdn.predict(np.array(img))
+
+    # Chuyển đổi ảnh numpy array sang định dạng Pillow Image
+    sr_img = Image.fromarray(sr_img)
+
+    return sr_img
+
+@app.route('/update', methods=['POST'])
+def update():
+    if 'fileToUpload' not in request.files:
+        return "No file uploaded"
+
+    file = request.files['fileToUpload']
+    if file.filename == '':
+        return "No file selected"
+
+    target_dir = 'static/images/avatar/'
+    user_id = session.get('id')  # Lấy ID người dùng từ session
+
+    target_file = target_dir + f"user_{user_id}.jpg"  # Đặt tên tệp hình ảnh với user_id
+
+    if not allowed_file(file.filename):
+        return 'Invalid file type.', 400
+
+    file.save(target_file)
+    
+    # Nhận dữ liệu từ biểu mẫu HTML và cập nhật thông tin người dùng vào cơ sở dữ liệu
+    full_name = request.form['fullName']
+    gender = request.form['gender']
+    phone = request.form['phone']
+    date_of_birth = request.form['date']
+    street = request.form['Street']
+    city = request.form['ciTy']
+    state = request.form['sTate']
+    email = request.form['email']
+    
+    # Thực hiện truy vấn SQL để cập nhật thông tin người dùng vào cơ sở dữ liệu
+    user_id = session['id']  # ID người dùng cần lấy thông tin
+    query = "UPDATE users SET full_name = %s, gender = %s, phone = %s, date_of_birth = %s, street = %s, city = %s, state = %s, email = %s WHERE id = %s"
+    cur = mysql.connection.cursor()
+    cur.execute(query, (full_name, gender, phone, date_of_birth, street, city, state, email, user_id))
+    mysql.connection.commit()
+    return redirect('/profile')
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
