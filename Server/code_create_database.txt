@@ -6,7 +6,15 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   	`username` varchar(50) NOT NULL,
   	`email` varchar(100) NOT NULL,
   	`password` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    `fullname` varchar(255),
+	`gender` varchar(50),
+	`phone` int(11),
+	`date_of_birth` date,
+	`street` varchar(255),
+	`city` varchar(255),
+	`state` varchar(255),
+	`ava` varchar(255),
+	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8MB4;
 
 CREATE TABLE IF NOT EXISTS `images` (
