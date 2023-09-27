@@ -76,12 +76,12 @@ def editProfile():
                 # Đặt tên tệp hình ảnh với user_id
                 target_file = target_dir + f"user_{user_id}.jpg"
                 file.save(target_file)
-        
+
         ava = target_file
-        
+
         # Gọi model ghi vào database
         User.editUserInfo(full_name, gender, phone, date_of_birth, street, city, state, job, ava, user_id)
-        
+
         # Điều hướng quay lại trang profile
         return redirect(url_for('profile'))
     else:
@@ -102,41 +102,6 @@ def show_all():
     
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userAll.html', image_all=image_all)
-
-
-@app.route('/update', methods=['POST'])
-def update():
-    if 'fileToUpload' not in request.files:
-        return "No file uploaded"
-
-    file = request.files['fileToUpload']
-    if file.filename == '':
-        return "No file selected"
-
-    target_dir = 'static/images/avatar/'
-    user_id = session.get('id')  # Lấy ID người dùng từ session
-
-    target_file = target_dir + f"user_{user_id}.jpg"  # Đặt tên tệp hình ảnh với user_id
-
-    if not config.allowed_file(file.filename):
-        return 'Invalid file type.', 400
-
-    file.save(target_file)
-    
-    # Nhận dữ liệu từ biểu mẫu HTML và cập nhật thông tin người dùng vào cơ sở dữ liệu
-    full_name = request.form['fullName']
-    gender = request.form['gender']
-    phone = request.form['phone']
-    date_of_birth = request.form['date']
-    street = request.form['Street']
-    city = request.form['ciTy']
-    state = request.form['sTate']
-    email = request.form['email']
-    # Thực hiện truy vấn SQL để cập nhật thông tin người dùng vào cơ sở dữ liệu
-    user_id = session['id']  # ID người dùng cần lấy thông tin
-    #Gọi model ghi vào database
-    User.editUserInfo(full_name,gender,phone,date_of_birth,street,city,state,email,user_id)
-    return redirect('/profile')
 
 #Cái này là post tọa độ mới
 @app.route('/update_coordinates', methods=['POST'])
