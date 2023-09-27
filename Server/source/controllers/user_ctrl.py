@@ -2,6 +2,7 @@ from source import app
 from flask import render_template, redirect, session,request
 from source.models_mvc.user_model import User
 from source import config
+from flask import Flask, request, jsonify
 
 @app.route('/userHome',methods=['GET', 'POST'])
 def userHome():
@@ -102,3 +103,17 @@ def update():
     #Gọi model ghi vào database
     User.editUserInfo(full_name,gender,phone,date_of_birth,street,city,state,email,user_id)
     return redirect('/profile')
+
+#Cái này là post tọa độ mới
+@app.route('/update_coordinates', methods=['POST'])
+def update_coordinates():
+    image_id = request.form['image_id']
+    new_lat = request.form['new_lat']
+    new_long = request.form['new_long']
+
+    # Gọi phương thức để cập nhật tọa độ vào cơ sở dữ liệu (ví dụ: User.updateImagePosition)
+    # Thực hiện xác thực người dùng và kiểm tra quyền trước khi cập nhật
+
+    # Trả về phản hồi (nếu cần)
+    response = {'message': 'Coordinates updated successfully'}
+    return redirect('/userPics')

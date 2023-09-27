@@ -6,11 +6,10 @@ import os
 import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:\\Users\\Cao Thi\\Downloads\\OIP (5).jpg'
-
+image_path = 'C://Users//Nhat Thu//Downloads//cat1.jpg'
 #Thông tin user
-username = "caothi"
-password = "123456"
+username = "nhatthu"
+password = "21522648"
 
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
