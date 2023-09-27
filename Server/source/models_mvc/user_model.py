@@ -66,7 +66,7 @@ class User:
 
         db.conn.commit()
         cur.close()
-
+        
     @staticmethod
     def getAllImg(): 
         db=DB()
