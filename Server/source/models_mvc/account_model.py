@@ -35,6 +35,16 @@ class Account:
         cursor.close()
         return account
     
+    #Kiếm tra sự tồn tài của email
+    @staticmethod
+    def checkExistenceEmail(email):
+        db = DB()
+        cursor = db.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM accounts WHERE email = %s', (email,))
+        account = cursor.fetchone()
+        cursor.close()
+        return account
+    
     #Thêm tài khoản
     @staticmethod
     def insertAccount(username,password,email):

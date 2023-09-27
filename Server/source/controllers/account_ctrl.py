@@ -2,7 +2,53 @@ from source import app
 from flask import request,session,render_template,redirect,url_for
 from source.models_mvc.account_model import Account
 import re
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from flask_caching import Cache
+import random
+import string
 
+# Create random string for the verification link
+def generate_random_string(length):
+    characters = string.ascii_letters + string.digits 
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
+# Create the MIMEMultipart object
+message = MIMEMultipart()
+app.config['CACHE_TYPE'] = 'simple' 
+cache = Cache(app)
+
+# Send verification email
+def send_verification_email(email, username):    
+    smtp_host= 'smtp.gmail.com'
+    smtp_port = 587
+    smpt_username = 'cloudkeeper4@gmail.com'
+    smtp_password = 'pygr pjpa cxht wgel'
+
+    #Create MIMEMuiltipart object
+    message= MIMEMultipart()
+    message['From'] = smpt_username
+    message['To'] = email
+    message['Subject'] = 'Account Verification'
+
+    # Generate the verification link using the username
+    verification_link = url_for('verify', username=username, string=generate_random_string(50), _external=True)
+
+    # Create the email message
+    body = f'Hi {username},\n\nPlease click the following link to verify your account:\n{verification_link} \n\nRegard, \nRoad Damage Support team'
+    message.attach(MIMEText(body, 'plain'))
+
+    # Send the email
+    try:
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(smpt_username,smtp_password)
+        server.sendmail(smpt_username, email, message.as_string())
+        server.quit()
+    except Exception as ex:
+        print('Error sending verfication mail: ', str(ex))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,11 +91,30 @@ def register():
         else:
             account=Account.checkExistence(username=username)
             if account:
-                msg = 'Account already exists!'
-            else:
-                Account.insertAccount(username,password,email)
-                msg = 'You have successfully registered!'
+                msg = 'Username already exists!'
+                account=Account.checkExistenceEmail(email=email)
+            elif account:
+                msg = 'Email already exists!'
+            else:                
+                cache.set('user_info', {'username': username, 'password': password, 'email': email,})                
+                send_verification_email(email, username)         
+                msg = 'Please check your email to verify your account'                
+                
     elif request.method == 'POST':
-        msg = 'Please fill out the form!'
-    
+        msg = 'Please fill out the form!'    
     return render_template('login.html', msg=msg)
+
+@app.route('/register/verify', methods=['GET'])
+def verify():
+    user_info = cache.get('user_info')   
+    if user_info is not None: 
+        username = user_info['username']
+        password = user_info['password']
+        email = user_info['email']
+        Account.insertAccount(username, password, email)  
+        cache.delete('user_info')      
+        return render_template('register_successfully.html',)
+    else: 
+        return render_template("login.html")          
+    
+    
