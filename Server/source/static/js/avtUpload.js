@@ -14,7 +14,7 @@ $(document).ready(function() {
             formData.append('fileToUpload', input.files[0]); // Thay đổi tên trường thành 'fileToUpload'
 
             $.ajax({
-                url: '/update',
+                url: '/editProfile',
                 type: 'POST',
                 data: formData,
                 processData: false,

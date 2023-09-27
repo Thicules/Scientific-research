@@ -1,5 +1,5 @@
 from source import app
-from flask import render_template, redirect, session,request
+from flask import render_template, redirect, session,request, url_for
 from source.models_mvc.user_model import User
 from source import config
 from flask import Flask, request, jsonify
@@ -48,17 +48,51 @@ def userPics():
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userPics.html', image_data=image_data)
 
-@app.route('/editProfile')
+@app.route('/editProfile', methods=['GET', 'POST'])
 def editProfile():
-    # Thực hiện truy vấn SQL để lấy thông tin người dùng từ cơ sở dữ liệu
-    user_id = session['id']  # ID người dùng cần lấy thông tin
+    if request.method == 'POST':
+        # Xác định ID người dùng từ session
+        user_id = session['id']
 
-    #gọi model
-    user_data=User.getUserInfo(user_id=user_id)
+        # Lấy thông tin người dùng từ biểu mẫu HTML
+        full_name = request.form.get('fullName')
+        gender = request.form.get('gender')
+        phone = request.form.get('phone')
+        date_of_birth = request.form.get('date')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        job = request.form.get('job')
+        print(request.form)
 
-    # Trả về template HTML và truyền dữ liệu người dùng vào template
-    return render_template('editProfile.html', user_data=user_data)
+        # Khởi tạo giá trị mặc định cho target_file
+        target_file = None
 
+        # Kiểm tra và xử lý tải lên avatar
+        if 'fileToUpload' in request.files:
+            file = request.files['fileToUpload']
+            if file.filename != '':
+                target_dir = 'source/static/images/avatar/'
+                # Đặt tên tệp hình ảnh với user_id
+                target_file = target_dir + f"user_{user_id}.jpg"
+                file.save(target_file)
+        
+        ava = target_file
+        
+        # Gọi model ghi vào database
+        User.editUserInfo(full_name, gender, phone, date_of_birth, street, city, state, job, ava, user_id)
+        
+        # Điều hướng quay lại trang profile
+        return redirect(url_for('profile'))
+    else:
+        # Xử lý khi yêu cầu là GET
+        # Lấy thông tin người dùng từ cơ sở dữ liệu
+        user_id = session['id']
+        user_data = User.getUserInfo(user_id=user_id)
+
+        # Trả về template HTML và truyền dữ liệu người dùng vào template
+        return render_template('editProfile.html', user_data=user_data)
+        
 @app.route('/userAll')
 def show_all():
     #Gọi model
