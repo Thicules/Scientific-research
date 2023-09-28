@@ -66,7 +66,7 @@ def upload_image():
 
     # Lưu tập tin ảnh vào thư mục static/images trên server
     filename = secure_filename(file.filename)
-    file_path = os.path.join('source/static', 'images', 'road', filename)
+    file_path = os.path.join('source', 'static', 'images', 'road', filename)
     file.save(file_path)
 
     # Tăng độ phân giải ảnh
