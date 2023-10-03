@@ -4,6 +4,7 @@ from source.models_mvc.account_model import Account
 import re
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -35,7 +36,6 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
         if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):

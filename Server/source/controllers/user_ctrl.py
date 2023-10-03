@@ -58,15 +58,14 @@ def editProfile():
         ava = None
 
         # Kiểm tra và xử lý tải lên avatar
-        if 'fileToUpload' in request.files:
-            file = request.files['fileToUpload']
+        if 'file' in request.files:
+            file = request.files['file']
             if file.filename != '':
                 target_file = f"user_{user_id}.jpg"
                 target_dir = os.path.join('source', 'static', 'images', 'road')
                 ava_path = os.path.join(target_dir, target_file)
                 file.save(ava_path)
                 ava = ava_path
-
         print(ava)
 
         # Lấy thông tin người dùng từ biểu mẫu HTML
