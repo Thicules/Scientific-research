@@ -5,7 +5,7 @@ class DB:
     DBNAME = "weblogin"
     DBIP = "localhost"
     DBUSER = "root"
-    DBPASS = "12345"
+    DBPASS = "baongan"
     def __init__(self):
         self.conn = MySQLdb.connect(self.DBIP,self.DBUSER,self.DBPASS,self.DBNAME)
 
