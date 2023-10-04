@@ -10,7 +10,7 @@ class User:
     def getUserInfo(user_id):
         db=DB()
         cur=db.cursor(MySQLdb.cursors.DictCursor)
-        query = "SELECT * FROM users WHERE id = %s"
+        query = "SELECT * FROM accounts WHERE id = %s"
         cur.execute(query, (user_id,))
         user_data = cur.fetchone()
         cur.close()
@@ -46,14 +46,27 @@ class User:
         cursor.close()
 
     @staticmethod
-    def editUserInfo(full_name,gender,phone,date_of_birth,street,city,state,email,user_id):
-        db=DB()
-        cur=db.cursor()
-        query = "UPDATE users SET full_name = %s, gender = %s, phone = %s, date_of_birth = %s, street = %s, city = %s, state = %s, email = %s WHERE id = %s"
-        cur.execute(query, (full_name, gender, phone, date_of_birth, street, city, state, email, user_id))
+    def editUserInfo(fullname, gender, phone, date_of_birth, street, city, state, job, ava, user_id):
+        db = DB()
+        cur = db.cursor()
+
+        # Kiểm tra sự tồn tại của bản ghi trong cơ sở dữ liệu
+        select_query = "SELECT id FROM accounts WHERE id = %s"
+        cur.execute(select_query, (user_id,))
+        result = cur.fetchone()
+
+        if result is None:
+            # Thêm dữ liệu vào cơ sở dữ liệu
+            insert_query = "INSERT INTO accounts (fullname, gender, phone, date_of_birth, street, city, state, job, ava) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cur.execute(insert_query, (fullname, gender, phone, date_of_birth, street, city, state, job, ava))
+        else:
+            # Cập nhật dữ liệu trong cơ sở dữ liệu
+            update_query = "UPDATE accounts SET fullname = %s, gender = %s, phone = %s, date_of_birth = %s, street = %s, city = %s, state = %s, job = %s, ava = %s WHERE id = %s"
+            cur.execute(update_query, (fullname, gender, phone, date_of_birth, street, city, state, job, ava, user_id))
+
         db.conn.commit()
         cur.close()
-    
+            
     @staticmethod
     def getAllImg(): 
         db=DB()
@@ -63,3 +76,5 @@ class User:
         results = cursor.fetchall()
         cursor.close()
         return results
+    
+    

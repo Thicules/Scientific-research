@@ -50,6 +50,7 @@ def send_verification_email(email, username):
     except Exception as ex:
         print('Error sending verfication mail: ', str(ex))
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
@@ -81,7 +82,6 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
         if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):
