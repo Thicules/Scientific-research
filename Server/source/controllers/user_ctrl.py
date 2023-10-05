@@ -1,7 +1,8 @@
 from source import app
-from flask import render_template, redirect, session,request
+from flask import render_template, redirect, session,request, url_for
 from source.models_mvc.user_model import User
 from source import config
+import os
 
 @app.route('/userHome',methods=['GET', 'POST'])
 def userHome():
@@ -47,17 +48,50 @@ def userPics():
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userPics.html', image_data=image_data)
 
-@app.route('/editProfile')
+@app.route('/editProfile', methods=['GET', 'POST'])
 def editProfile():
-    # Thực hiện truy vấn SQL để lấy thông tin người dùng từ cơ sở dữ liệu
-    user_id = session['id']  # ID người dùng cần lấy thông tin
+    if request.method == 'POST':
+        # Xác định ID người dùng từ session
+        user_id = session['id']
 
-    #gọi model
-    user_data=User.getUserInfo(user_id=user_id)
+        # Khởi tạo giá trị mặc định cho ava
+        ava = None
 
-    # Trả về template HTML và truyền dữ liệu người dùng vào template
-    return render_template('editProfile.html', user_data=user_data)
+        # Kiểm tra và xử lý tải lên avatar
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                target_file = f"user_{user_id}.jpg"
+                target_dir = os.path.join('source', 'static', 'images', 'road')
+                ava_path = os.path.join(target_dir, target_file)
+                file.save(ava_path)
+                ava = ava_path
+        print(ava)
 
+        # Lấy thông tin người dùng từ biểu mẫu HTML
+        full_name = request.form.get('full_name')
+        gender = request.form.get('gender')
+        phone = request.form.get('phone')
+        date_of_birth = request.form.get('date_of_birth')
+        street = request.form.get('street')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        job = request.form.get('job')
+
+        # Gọi model ghi vào database
+        User.editUserInfo(full_name, gender, phone, date_of_birth, street, city, state, job, ava, user_id)
+
+        # Điều hướng quay lại trang profile
+        return redirect(url_for('profile'))
+    else:
+        # Xử lý khi yêu cầu là GET
+        # Lấy thông tin người dùng từ cơ sở dữ liệu
+        user_id = session['id']
+        user_data = User.getUserInfo(user_id=user_id)
+
+        # Trả về template HTML và truyền dữ liệu người dùng vào template
+        return render_template('editProfile.html', user_data=user_data)
+                       
 @app.route('/userAll')
 def show_all():
     #Gọi model
@@ -67,38 +101,3 @@ def show_all():
     
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userAll.html', image_all=image_all)
-
-
-@app.route('/update', methods=['POST'])
-def update():
-    if 'fileToUpload' not in request.files:
-        return "No file uploaded"
-
-    file = request.files['fileToUpload']
-    if file.filename == '':
-        return "No file selected"
-
-    target_dir = 'static/images/avatar/'
-    user_id = session.get('id')  # Lấy ID người dùng từ session
-
-    target_file = target_dir + f"user_{user_id}.jpg"  # Đặt tên tệp hình ảnh với user_id
-
-    if not config.allowed_file(file.filename):
-        return 'Invalid file type.', 400
-
-    file.save(target_file)
-    
-    # Nhận dữ liệu từ biểu mẫu HTML và cập nhật thông tin người dùng vào cơ sở dữ liệu
-    full_name = request.form['fullName']
-    gender = request.form['gender']
-    phone = request.form['phone']
-    date_of_birth = request.form['date']
-    street = request.form['Street']
-    city = request.form['ciTy']
-    state = request.form['sTate']
-    email = request.form['email']
-    # Thực hiện truy vấn SQL để cập nhật thông tin người dùng vào cơ sở dữ liệu
-    user_id = session['id']  # ID người dùng cần lấy thông tin
-    #Gọi model ghi vào database
-    User.editUserInfo(full_name,gender,phone,date_of_birth,street,city,state,email,user_id)
-    return redirect('/profile')

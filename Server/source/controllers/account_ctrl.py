@@ -20,6 +20,30 @@ message = MIMEMultipart()
 app.config['CACHE_TYPE'] = 'simple' 
 cache = Cache(app)
 
+def send_forgot_password_email(email, password):    
+    smtp_host= 'smtp.gmail.com'
+    smtp_port = 587
+    smpt_username = 'cloudkeeper4@gmail.com'
+    smtp_password = 'pygr pjpa cxht wgel'
+
+    #Create MIMEMuiltipart object
+    message= MIMEMultipart()
+    message['From'] = smpt_username
+    message['To'] = email
+    message['Subject'] = 'Reset Password'
+    body = f'Hi, your new password is {password}. \n\nRegard, \nRoad Damage Support team'
+    message.attach(MIMEText(body, 'plain'))
+
+    # Send the email
+    try:
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(smpt_username,smtp_password)
+        server.sendmail(smpt_username, email, message.as_string())
+        server.quit()
+    except Exception as ex:
+        print('Error sending forgot mail: ', str(ex))
+
 # Send verification email
 def send_verification_email(email, username):    
     smtp_host= 'smtp.gmail.com'
@@ -49,6 +73,7 @@ def send_verification_email(email, username):
         server.quit()
     except Exception as ex:
         print('Error sending verfication mail: ', str(ex))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -81,7 +106,6 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
         if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             msg = 'Invalid email address!'
         elif not re.match(r'[A-Za-z0-9]+', username):
@@ -93,8 +117,8 @@ def register():
             if account:
                 msg = 'Username already exists!'
                 account=Account.checkExistenceEmail(email=email)
-            elif account:
-                msg = 'Email already exists!'
+                if account:
+                    msg = 'Email already exists!'
             else:                
                 cache.set('user_info', {'username': username, 'password': password, 'email': email,})                
                 send_verification_email(email, username)         
@@ -111,10 +135,27 @@ def verify():
         username = user_info['username']
         password = user_info['password']
         email = user_info['email']
+        # Insert user's info after verify successfully
         Account.insertAccount(username, password, email)  
-        cache.delete('user_info')      
+        cache.delete('user_info')   # Delete cache   
         return render_template('register_successfully.html',)
     else: 
         return render_template("login.html")          
     
-    
+@app.route('/forgot', methods=['GET', 'POST'])
+def forgot():
+    msg=''
+    if request.method == 'GET':
+        return render_template("forgotPassword.html")
+    if request.method == 'POST':
+        email=request.form['user_email']
+        # Create a new random string as new password
+        newPassword=generate_random_string(6)
+        # Update password in DB
+        Account.updatePassword(email,newPassword)
+        # Send mail
+        send_forgot_password_email(email,newPassword)
+        msg = "Please check email to get your new password"
+        return render_template("login.html", msg=msg)   
+
+  
