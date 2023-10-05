@@ -194,7 +194,7 @@
                             </a>
                         </div>
                         <button class="userbtn delete"><i class="fa fa-trash"></i> Delete</button>
-                        <button class="userbtn edit" data-toggle="modal" data-target="#mapModal" data-lat="{{ image['lat'] }}" data-long="{{ image['long'] }}"><i class="bi bi-geo-alt-fill"></i>Edit</button>
+                        <button class="edit" data-toggle="modal" data-target="#mapModal" id="{{image['id']}}" position="{{image['position']}}"><i class="bi bi-geo-alt-fill"></i>Edit</button>
                     </div>
                     <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
                         <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
@@ -232,9 +232,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <form action="/update_coordinates" method="POST">
-                    <button type="submit">Save</button>
-                </form>
+                <button type="submit" id="save">Save</button>
             </div>
         </div>
     </div>
@@ -243,46 +241,52 @@
 
 <script>
 // JavaScript to control modal behavior and update coordinates
-$(document).ready(function () {
-    // When "Edit" button is clicked, populate modal with data from the clicked image
-    $('.edit').click(function () {
-        var lat = $(this).data('lat');
-        var long = $(this).data('long');
-        var imageId = $(this).data('image-id'); // Thêm data-image-id
-        $('#newLat').val(lat);
-        $('#newLong').val(long);
-        $('#saveCoords').data('image-id', imageId); // Lưu imageId vào nút "Save"
+var editButtons = document.getElementsByClassName('edit');
+
+for (var i = 0; i < editButtons.length; i++) {
+    var editButton = editButtons[i];
+    editButton.addEventListener('click', function() {
+        const imageId=this.id;
+        var position = this.getAttribute("position");
+        position=position.split(',')
+        var newLatInput = document.getElementById('newLat');
+        var newLongInput = document.getElementById('newLong');
+        // Đặt giá trị cho trường dữ liệu trong form
+        newLatInput.value = position[0];
+        newLongInput.value=position[1];
+        // gắn id
+        var saveButton = document.getElementById("save");
+        saveButton.setAttribute("data-id",imageId);
     });
+    var buttonSave=document.getElementById("save");
+    buttonSave.addEventListener('click', function(){
+        var newLatInput = document.getElementById('newLat').value;
+        var newLongInput = document.getElementById('newLong').value;
+        var id=buttonSave.getAttribute("data-id");
+        console.log(newLatInput,newLongInput,id);
+        var data = {
+            id: id,
+            lat:newLatInput,
+            long:newLongInput
+        };
 
-    // When "Save" button is clicked, update the coordinates
-    $('#saveCoords').click(function () {
-        var newLat = $('#newLat').val();
-        var newLong = $('#newLong').val();
-        var imageId = $(this).data('image-id'); // Lấy imageId từ nút "Save"
-
-        // Gửi dữ liệu tọa độ mới lên máy chủ để cập nhật vào cơ sở dữ liệu
+        // Gửi yêu cầu POST đến một URL cụ thể
         $.ajax({
+            url: "/update_coordinates",
             type: "POST",
-            url: "/update_coordinates", // Đặt URL tương ứng với Flask route để cập nhật tọa độ
-            data: {
-                image_id: imageId,
-                new_lat: newLat,
-                new_long: newLong
+            data: data,
+            success: function(response) {
+                // Xử lý phản hồi thành công
+                location.reload();
             },
-            success: function (response) {
-                // Xử lý phản hồi từ máy chủ (nếu cần)
-                console.log(response);
-
-                // Đóng modal sau khi cập nhật thành công
-                $('#mapModal').modal('hide');
-            },
-            error: function (error) {
-                // Xử lý lỗi (nếu cần)
-                console.error(error);
+            error: function(error) {
+                // Xử lý lỗi
+                console.log(error);
             }
         });
-    });
-});
+    })
+}
+
 </script>
 
 
