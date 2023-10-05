@@ -30,7 +30,7 @@ class User:
     def getImgInfo(user_id):
         db=DB()
         cur=db.cursor()
-        query = "SELECT path, position, result FROM images WHERE user_id = %s"
+        query = "SELECT path, position, result,id FROM images WHERE user_id = %s"
         cur.execute(query, (user_id,))
         results = cur.fetchall()
         cur.close()
@@ -66,7 +66,7 @@ class User:
 
         db.conn.commit()
         cur.close()
-        
+            
     @staticmethod
     def getAllImg(): 
         db=DB()
@@ -76,5 +76,14 @@ class User:
         results = cursor.fetchall()
         cursor.close()
         return results
+    @staticmethod
+    def editPosition(id,position):
+        db = DB()
+        cur = db.cursor()
+        query="UPDATE images set position=%s where id= %s"
+        cur.execute(query,(position,id))
+        db.conn.commit()
+        cur.close()
+        
     
     

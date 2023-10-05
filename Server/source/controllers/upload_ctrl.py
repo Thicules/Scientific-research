@@ -66,15 +66,15 @@ def upload_image():
 
     # Lưu tập tin ảnh vào thư mục static/images trên server
     filename = secure_filename(file.filename)
-    file_path = os.path.join('source/static', 'images', 'road', filename)
-    file.save(file_path)
+    file_path = os.path.join('static', 'images', 'road', filename)
+    file.save(os.path.join('source',file_path))
 
     # Tăng độ phân giải ảnh
     #sr_img = upscale_image(file_path)
     #sr_img.save(file_path)
 
     # Chạy model
-    res = ModelRoad.predict(file_path)
+    res = ModelRoad.predict(os.path.join('source',file_path))
 
     # Lưu thông tin ảnh vào cơ sở dữ liệu
     User.insertImg(account,filename,res,latitude,longitude,file_path)
