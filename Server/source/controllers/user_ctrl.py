@@ -6,15 +6,33 @@ import os
 
 @app.route('/userHome',methods=['GET', 'POST'])
 def userHome():
-    return render_template('userHome.html')
+    # Lấy danh sách đường dẫn hình ảnh từ cơ sở dữ liệu dựa trên người dùng hiện tại
+    user_id = session['id']  # Lấy id người dùng từ session
+
+    #gọi model
+    user_data = User.getUserInfo(user_id=user_id)
+
+    return render_template('userHome.html', user_data=user_data)
 
 @app.route('/userAbout')
 def userAbout():
-    return render_template('userAbout.html')
+    # Lấy danh sách đường dẫn hình ảnh từ cơ sở dữ liệu dựa trên người dùng hiện tại
+    user_id = session['id']  # Lấy id người dùng từ session
+
+    #gọi model
+    user_data = User.getUserInfo(user_id=user_id)
+
+    return render_template('userAbout.html', user_data=user_data)
 
 @app.route('/userContact')
 def userContact():
-    return render_template('userContact.html')
+    # Lấy danh sách đường dẫn hình ảnh từ cơ sở dữ liệu dựa trên người dùng hiện tại
+    user_id = session['id']  # Lấy id người dùng từ session
+
+    #gọi model
+    user_data = User.getUserInfo(user_id=user_id)
+
+    return render_template('userContact.html', user_data=user_data)
 
 @app.route('/ava', methods=['POST'])
 def upload():
@@ -41,13 +59,14 @@ def userPics():
     user_id = session['id']  # Lấy id người dùng từ session
 
     #gọi model
+    user_data = User.getUserInfo(user_id=user_id)
     results= User.getImgInfo(user_id=user_id)
 
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
     image_data = [{'path': result[0], 'position': result[1], 'result': result[2], 'id':result[3]} for result in results]
 
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
-    return render_template('userPics.html', image_data=image_data)
+    return render_template('userPics.html', image_data=image_data, user_data=user_data)
 
 @app.route('/editProfile', methods=['GET', 'POST'])
 def editProfile():
@@ -95,13 +114,18 @@ def editProfile():
                            
 @app.route('/userAll')
 def show_all():
+    # Lấy thông tin người dùng từ cơ sở dữ liệu
+    user_id = session['id']
+
     #Gọi model
     results=User.getAllImg()
+    user_data = User.getUserInfo(user_id=user_id)
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
     image_all = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
     
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
-    return render_template('userAll.html', image_all=image_all)
+    return render_template('userAll.html', image_all=image_all, user_data=user_data)
+
 #Cái này là post tọa độ mới
 @app.route('/update_coordinates', methods=['POST'])
 def update_coordinates():

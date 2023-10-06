@@ -1,6 +1,7 @@
 from source import app
 from flask import request,session,render_template,redirect,url_for
 from source.models_mvc.account_model import Account
+from source.models_mvc.user_model import User
 import re
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -87,7 +88,8 @@ def login():
             session['id'] = account['id']
             session['username'] = account['username']
             msg = 'Logged in successfully !'
-            return render_template('userHome.html', msg = msg)
+            user_data = User.getUserInfo(user_id=session['id'])
+            return render_template('userHome.html', msg = msg, user_data=user_data)
         else:
             msg = 'Incorrect username/password!'
     return render_template('login.html', msg = msg)
