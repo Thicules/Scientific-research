@@ -62,7 +62,7 @@ def editProfile():
             file = request.files['file']
             if file.filename != '':
                 target_file = f"user_{user_id}.jpg"
-                target_dir = os.path.join('source', 'static', 'images', 'road')
+                target_dir = os.path.join('source', 'static', 'images', 'avatar')
                 ava_path = os.path.join(target_dir, target_file)
                 file.save(ava_path)
                 ava = ava_path
