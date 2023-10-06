@@ -74,7 +74,8 @@ def upload_image():
     #sr_img.save(file_path)
 
     # Chạy model
-    res = ModelRoad.predict(os.path.join("source",file_path))
+    res = ModelRoad.predict(os.path.join('source',file_path))
+
 
     # Lưu thông tin ảnh vào cơ sở dữ liệu
     User.insertImg(account,filename,res,latitude,longitude,file_path)
