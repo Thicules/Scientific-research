@@ -43,7 +43,7 @@ def userPics():
     results= User.getImgInfo(user_id=user_id)
 
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
-    image_data = [{'path': result[0], 'position': result[1], 'result': result[2]} for result in results]
+    image_data = [{'path': result[0], 'position': result[1], 'result': result[2], 'id':result[3]} for result in results]
 
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userPics.html', image_data=image_data)
@@ -62,7 +62,7 @@ def editProfile():
             file = request.files['file']
             if file.filename != '':
                 target_file = f"user_{user_id}.jpg"
-                target_dir = os.path.join('source', 'static', 'images', 'road')
+                target_dir = os.path.join('source', 'static', 'images', 'avatar')
                 ava_path = os.path.join(target_dir, target_file)
                 file.save(ava_path)
                 ava = ava_path
@@ -101,3 +101,17 @@ def show_all():
     
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userAll.html', image_all=image_all)
+#Cái này là post tọa độ mới
+@app.route('/update_coordinates', methods=['POST'])
+def update_coordinates():
+    image_id = request.form['id']
+    new_lat = request.form['lat']
+    new_long = request.form['long']
+    position=new_lat+','+new_long
+    User.editPosition(image_id,position)
+
+    # Gọi phương thức để cập nhật tọa độ vào cơ sở dữ liệu (ví dụ: User.updateImagePosition)
+    # Thực hiện xác thực người dùng và kiểm tra quyền trước khi cập nhật
+
+    # Trả về phản hồi (nếu cần)
+    return redirect('/userPics')
