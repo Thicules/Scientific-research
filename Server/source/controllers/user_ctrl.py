@@ -26,13 +26,14 @@ def profile():
     user_id = session['id']  # Lấy id người dùng từ session
 
     #gọi model
+    user_data = User.getUserInfo(user_id=user_id)
     results=User.getPathImg(user_id=user_id)
 
     # Lấy danh sách đường dẫn hình ảnh từ kết quả truy vấn
     image_paths = [result[0] for result in results]
 
     # Render mẫu 'profile.html' với danh sách đường dẫn hình ảnh
-    return render_template('profile.html', image_paths=image_paths)
+    return render_template('profile.html', image_paths=image_paths, user_data=user_data)
 
 @app.route('/userPics')
 def userPics():
@@ -53,20 +54,20 @@ def editProfile():
     if request.method == 'POST':
         # Xác định ID người dùng từ session
         user_id = session['id']
+        user_data = User.getUserInfo(user_id=user_id)
 
         # Khởi tạo giá trị mặc định cho ava
-        ava = None
+        ava = user_data['ava']
 
         # Kiểm tra và xử lý tải lên avatar
         if 'file' in request.files:
             file = request.files['file']
             if file.filename != '':
                 target_file = f"user_{user_id}.jpg"
-                target_dir = os.path.join('source', 'static', 'images', 'road')
+                target_dir = os.path.join('static', 'images', 'avatar')
                 ava_path = os.path.join(target_dir, target_file)
-                file.save(ava_path)
+                file.save(os.path.join('source', ava_path))
                 ava = ava_path
-        print(ava)
 
         # Lấy thông tin người dùng từ biểu mẫu HTML
         full_name = request.form.get('full_name')
@@ -91,7 +92,7 @@ def editProfile():
 
         # Trả về template HTML và truyền dữ liệu người dùng vào template
         return render_template('editProfile.html', user_data=user_data)
-                       
+                           
 @app.route('/userAll')
 def show_all():
     #Gọi model

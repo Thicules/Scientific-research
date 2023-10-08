@@ -25,12 +25,22 @@ class Account:
         cursor.close()
         return account
     
-    #Kiếm tra sự tồn tài của tài khoản
+    #Kiếm tra sự tồn tại của tài khoản
     @staticmethod
     def checkExistence(username):
         db = DB()
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+        account = cursor.fetchone()
+        cursor.close()
+        return account
+    
+    #Kiếm tra sự tồn tại của email
+    @staticmethod
+    def checkExistenceEmail(email):
+        db = DB()
+        cursor = db.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT * FROM accounts WHERE email = %s', (email,))
         account = cursor.fetchone()
         cursor.close()
         return account
@@ -43,3 +53,23 @@ class Account:
         cursor.execute('INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)', (username, email, password))
         db.conn.commit()
         cursor.close()
+
+    #Thay đổi mật khẩu người dùng
+    @staticmethod
+    def updatePassword(email, new_password):
+        db = DB()
+        cursor = db.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE accounts SET password = %s WHERE email = %s', (new_password, email))
+        db.conn.commit()
+        cursor.close()
+
+    @staticmethod
+    def getEmail(id):
+        db = DB()
+        cursor = db.cursor(MySQLdb.cursors.DictCursor)
+        query="SELECT email FROM accounts WHERE id= %s"
+        cursor.execute(query, (id,))
+        account = cursor.fetchone()
+        cursor.close()
+        return account
+            
