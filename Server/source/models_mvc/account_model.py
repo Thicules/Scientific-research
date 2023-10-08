@@ -62,3 +62,14 @@ class Account:
         cursor.execute('UPDATE accounts SET password = %s WHERE email = %s', (new_password, email))
         db.conn.commit()
         cursor.close()
+
+    @staticmethod
+    def getEmail(id):
+        db = DB()
+        cursor = db.cursor(MySQLdb.cursors.DictCursor)
+        query="SELECT email FROM accounts WHERE id= %s"
+        cursor.execute(query, (id,))
+        account = cursor.fetchone()
+        cursor.close()
+        return account
+            

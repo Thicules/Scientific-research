@@ -160,4 +160,15 @@ def forgot():
         msg = "Please check email to get your new password"
         return render_template("login.html", msg=msg)   
 
-  
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    msg=''
+    if request.method == 'GET':
+        return render_template("changePassword.html")
+    if request.method == 'POST':
+        password = request.form['newpassword']
+        id = session['id']
+        email = Account.getEmail(id)['email']
+        Account.updatePassword(email,password)
+        msg="Change password successfully!"
+    return render_template("editProfile.html",msg=msg)
