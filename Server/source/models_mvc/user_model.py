@@ -84,6 +84,15 @@ class User:
         cur.execute(query,(position,id))
         db.conn.commit()
         cur.close()
+
+    @staticmethod
+    def deleteImage(id):
+        db = DB()
+        cur = db.cursor()
+        query = "DELETE FROM images WHERE id = %s"
+        cur.execute(query, (id,))
+        db.conn.commit()
+        cur.close()
         
     
     
