@@ -103,8 +103,11 @@
                           data-mdb-toggle="dropdown"
                           aria-expanded="false"
                         >
-                        <div style="font-size: 2.5rem !important">
-                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        <div style="font-size: 2.5rem !important"> 
+                            {% if user_data['ava'] %} 
+                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
+                            {% endif %} 
                         </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
@@ -113,7 +116,7 @@
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
-                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                                    <p class="menu-item-text">{{ user_data.email }}</p>
                             </a>
                         </li>
                         <li>
@@ -156,36 +159,38 @@
     </div>
     <!-- Navbar & Hero End -->
 
-   <!--Start Profile-->
+    <!--Start profile -->
     <form action="/editProfile" method="POST" enctype="multipart/form-data">
-    <div class="container">
-        <div class="row gutters">
-        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="account-settings">
-                    
-                    <div class="user-profile">
-                        <div class="avatar-wrapper">
-                            <img class="profile-pic" src="static/img/base_user.jpg" />
-                            <div class="upload-button">
-                                <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+        <div class="container">
+            <div class="row gutters">
+                <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="account-settings">
+                                <div class="user-profile">
+                                    <div class="avatar-wrapper"> 
+                                        {% if user_data['ava'] %} 
+                                        <img class="profile-pic" src="{{ user_data['ava'] }}" /> 
+                                        {% else %} 
+                                        <img class="profile-pic" src="/static/img/base_user.jpg" /> 
+                                        {% endif %} 
+                                        <div class="upload-button"> <i class="fa fa-arrow-circle-up" aria-hidden="true"></i> 
+                                        </div> 
+                                        <input class="file-upload" type="file" id="file" name="file"> 
+                                    </div>
+                                    <h5 class="user-name">{{ user_data.fullname }}</h5>
+                                    <h6 class="user-email">{{ user_data.email }}</h6>
+                                    <div class="change-password"><a href="/change-password">Change password</a></div>
+                                    <div class="msg">{{msg}}</div>
+                                </div>
+                                <div class="about">
+                                    <h5>About</h5>
+                                    <p>Hello, I am the owner of the road damage detection system.</p>
+                                </div>
                             </div>
-                            <input class="file-upload" type="file" id="file" name="file">
                         </div>
-                        
-                        <h5 class="user-name">My full name</h5>
-                        <h6 class="user-email">myemail@gmail.com</h6>
-                    </div>
-                    
-                    <div class="about">
-                        <h5>About</h5>
-                        <p>Hello, I am the owner of the road damage detection system.</p>
-                    </div>
+                    </div>                         
                 </div>
-            </div>
-        </div>
-        </div>
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
         <div class="card h-100">
             <div class="card-body">
@@ -196,25 +201,25 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="fullName">Full Name</label>
-                                <input type="text" class="form-control" name="full_name" id="fullName" placeholder="Enter full name" >
+                                <input type="text" class="form-control" name="full_name" id="fullName" placeholder="Enter full name" value="{{ user_data.fullname }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="gender">Gender</label>
-                                <input type="gender" class="form-control" name="gender" id="gender" placeholder="Male/Female" >
+                                <input type="gender" class="form-control" name="gender" id="gender" placeholder="Male/Female" value="{{ user_data.gender }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="phone">Phone</label>
-                                <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter phone number" >
+                                <input type="text" class="form-control" name="phone" id="phone" placeholder="Enter phone number" value="{{ user_data.phone }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="date">Date of birth</label>
-                                <input type="date" class="form-control" name="date_of_birth" id="date" placeholder="Ex: 07/08/2003" >
+                                <input type="date" class="form-control" name="date_of_birth" id="date" placeholder="Ex: 07/08/2003" value="{{ user_data.date_of_birth }}">
                             </div>
                         </div>
                     </div>
@@ -225,25 +230,25 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="street">Street</label>
-                                <input type="name" class="form-control" name="street" id="street" placeholder="Enter Street" >
+                                <input type="name" class="form-control" name="street" id="street" placeholder="Enter Street" value="{{ user_data.street }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="name" class="form-control" name="city" id="city" placeholder="Enter City" >
+                                <input type="name" class="form-control" name="city" id="city" placeholder="Enter City" value="{{ user_data.city }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" name="state" id="state" placeholder="Enter State" >
+                                <input type="text" class="form-control" name="state" id="state" placeholder="Enter State" value="{{ user_data.state }}">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="job">Job</label>
-                                <input type="text" class="form-control" name="job" id="job" placeholder="Enter your job">
+                                <input type="text" class="form-control" name="job" id="job" placeholder="Enter your job" value="{{ user_data.job }}">
                             </div>
                         </div>
                     </div>
@@ -262,7 +267,6 @@
         </div>
     </div>
     <!--End profile-->
-
 
     <!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
