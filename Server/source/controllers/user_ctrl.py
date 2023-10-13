@@ -140,3 +140,12 @@ def update_coordinates():
 
     # Trả về phản hồi (nếu cần)
     return redirect('/userPics')
+
+@app.route('/delete_image', methods=['POST'])
+def delete_image():
+    image_id = request.form['id']
+    User.deleteImage(image_id)
+    # Thực hiện xác thực người dùng và kiểm tra quyền trước khi cập nhật
+
+    # Trả về phản hồi (nếu cần)
+    return redirect('/userPics')
