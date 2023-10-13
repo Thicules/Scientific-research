@@ -11,6 +11,7 @@ image_path = 'C:/Users/M S I/Downloads/download.jpg'
 username = "admin"
 password = "admin"
 
+
 # Lấy tên tệp tin ảnh từ đường dẫn
 filename = os.path.basename(image_path)
 
