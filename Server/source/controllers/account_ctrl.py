@@ -171,4 +171,4 @@ def change_password():
         email = Account.getEmail(id)['email']
         Account.updatePassword(email,password)
         msg="Change password successfully!"
-    return render_template("editProfile.html",msg=msg)
+    return render_template("changePassword.html",msg=msg)
