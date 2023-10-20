@@ -1,8 +1,8 @@
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+import hashlib
 from source import app
-from source.config.configDB import DB 
-
+from source.config.configDB import DB
 
 class Account:
     # Xác thực tài khoản
@@ -20,7 +20,9 @@ class Account:
     def login(username,password):
         db = DB()
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = % s AND password = % s', (username, password, ))
+        # Hash password
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password_hash))
         account = cursor.fetchone()
         cursor.close()
         return account
@@ -50,7 +52,9 @@ class Account:
     def insertAccount(username,password,email):
         db = DB()
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)', (username, email, password))
+        # Hash password
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        cursor.execute('INSERT INTO accounts (username, email, password) VALUES (%s, %s, %s)', (username, email, password_hash))
         db.conn.commit()
         cursor.close()
 
@@ -59,7 +63,9 @@ class Account:
     def updatePassword(email, new_password):
         db = DB()
         cursor = db.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('UPDATE accounts SET password = %s WHERE email = %s', (new_password, email))
+        # Hash the new password
+        new_password_hash = hashlib.sha256(new_password.encode()).hexdigest()
+        cursor.execute('UPDATE accounts SET password = %s WHERE email = %s', (new_password_hash, email))
         db.conn.commit()
         cursor.close()
 
