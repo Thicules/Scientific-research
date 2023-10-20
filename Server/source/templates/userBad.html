@@ -268,6 +268,24 @@
 
     <!-- Template Javascript -->
     <script src="static/js/main.js"></script>
+
+    
+    <!-- Đoạn mã JavaScript cho bản đồ -->
+    <script>
+        // Tạo bản đồ và đặt tọa độ ban đầu và mức thu phóng
+        var map = L.map('map').setView([51.505, -0.09], 13);
+    
+        // Thêm lớp bản đồ OpenStreetMap
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        // Thêm đánh dấu và cửa sổ thông báo popup
+        L.marker([11.94446627102782, 108.45876308642964]).addTo(map)
+            .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+            .openPopup();
+    </script>
+    
 </body>
 
 </html>
