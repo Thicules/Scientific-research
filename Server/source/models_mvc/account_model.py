@@ -10,7 +10,9 @@ class Account:
     def validateAccount(username,password):
         db =DB()
         cursor=db.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
+        # Hash password
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password_hash))
         account = cursor.fetchone()
         cursor.close()
         return account
