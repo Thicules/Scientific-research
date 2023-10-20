@@ -5,7 +5,7 @@ from source.models_mvc.account_model import Account
 import geocoder
 import os
 from PIL import Image
-from ISR.models import RDN, RRDN
+# from ISR.models import RDN, RRDN
 from  model_train.load_model import ModelRoad
 from source.models_mvc.user_model import User
 from source import config
