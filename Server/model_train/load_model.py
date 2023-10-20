@@ -15,7 +15,8 @@ class ModelRoad:
         y_pred = classifier.predict(test_image)
         y_pred =np.array(y_pred)
         y_pred =y_pred.flatten()
-        if y_pred[0] < 0:
+        y_pred=np.round(y_pred)
+        if y_pred == 0:
             prediction = 'Bad'
         else:
             prediction = 'Good'

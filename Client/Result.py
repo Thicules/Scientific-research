@@ -6,7 +6,7 @@ import os
 import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
-image_path = 'C:/Users/M S I/Downloads/download.jpg'
+image_path = 'E:/Reference/NCKH/road-damage/train/Damage/China_Drone_000009.jpg'
 #Thông tin user
 username = "admin"
 password = "admin"
