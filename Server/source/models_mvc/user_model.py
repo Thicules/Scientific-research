@@ -76,12 +76,34 @@ class User:
         results = cursor.fetchall()
         cursor.close()
         return results
+    
+    @staticmethod
+    def getAllGood(): 
+        db = DB()
+        cursor = db.cursor()
+        # Truy vấn dữ liệu từ cơ sở dữ liệu
+        cursor.execute("SELECT result, position FROM images WHERE result = 'cat'")
+        results = cursor.fetchall()
+        cursor.close()
+
+        filtered_results = [row[1] for row in results]
+        return filtered_results
+    
     @staticmethod
     def editPosition(id,position):
         db = DB()
         cur = db.cursor()
         query="UPDATE images set position=%s where id= %s"
         cur.execute(query,(position,id))
+        db.conn.commit()
+        cur.close()
+
+    @staticmethod
+    def deleteImage(id):
+        db = DB()
+        cur = db.cursor()
+        query = "DELETE FROM images WHERE id = %s"
+        cur.execute(query, (id,))
         db.conn.commit()
         cur.close()
         
