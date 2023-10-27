@@ -177,6 +177,7 @@
     background-size: cover;
 }
 .hero-header1 {
+    margin-top: 10px;
     background: linear-gradient(rgba(20, 20, 31, .7), rgba(20, 20, 31, .7)), url(../img/header-bg.jpg);
     background-position: center center;
     background-repeat: no-repeat;

@@ -12,7 +12,7 @@ class Account:
         cursor=db.cursor(MySQLdb.cursors.DictCursor)
         # Hash password
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password_hash))
+        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password_hash,))
         account = cursor.fetchone()
         cursor.close()
         return account
