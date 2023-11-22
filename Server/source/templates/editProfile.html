@@ -103,8 +103,11 @@
                           data-mdb-toggle="dropdown"
                           aria-expanded="false"
                         >
-                        <div style="font-size: 2.5rem !important">
-                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        <div style="font-size: 2.5rem !important"> 
+                            {% if user_data['ava'] %} 
+                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
+                            {% endif %} 
                         </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
@@ -113,7 +116,7 @@
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
-                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                                    <p class="menu-item-text">{{ user_data.email }}</p>
                             </a>
                         </li>
                         <li>
@@ -156,7 +159,7 @@
     </div>
     <!-- Navbar & Hero End -->
 
-   <!--Start Profile-->
+    <!--Start profile -->
     <form action="/editProfile" method="POST" enctype="multipart/form-data">
         <div class="container">
             <div class="row gutters">
@@ -165,34 +168,28 @@
                         <div class="card-body">
                             <div class="account-settings">
                                 <div class="user-profile">
-                                    <div class="avatar-wrapper">
-                                        <img class="profile-pic" src="{{ user_data.ava }}" />
-                                        <div class="upload-button">
-                                            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
-                                        </div>
-                                        <input class="file-upload" type="file" id="file" name="file">
+                                    <div class="avatar-wrapper"> 
+                                        {% if user_data['ava'] %} 
+                                        <img class="profile-pic" src="{{ user_data['ava'] }}" /> 
+                                        {% else %} 
+                                        <img class="profile-pic" src="/static/img/base_user.jpg" /> 
+                                        {% endif %} 
+                                        <div class="upload-button"> <i class="fa fa-arrow-circle-up" aria-hidden="true"></i> 
+                                        </div> 
+                                        <input class="file-upload" type="file" id="file" name="file"> 
                                     </div>
                                     <h5 class="user-name">{{ user_data.fullname }}</h5>
                                     <h6 class="user-email">{{ user_data.email }}</h6>
+                                    <div class="change-password"><a href="/change-password">Change password</a></div>
+                                    <div class="msg">{{msg}}</div>
                                 </div>
-                    
                                 <div class="about">
                                     <h5>About</h5>
                                     <p>Hello, I am the owner of the road damage detection system.</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <h5 class="user-name">My full name</h5>
-                        <h6 class="user-email">myemail@gmail.com</h6>
-                        <div class="change-password"><a href="/change-password">Change password</a></div>
-                        <div class="msg">{{msg}}</div>
-                    </div>
-                    
-                    <div class="about">
-                        <h5>About</h5>
-                        <p>Hello, I am the owner of the road damage detection system.</p>
-                    </div>
+                    </div>                         
                 </div>
         <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
         <div class="card h-100">
