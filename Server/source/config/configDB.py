@@ -15,3 +15,5 @@ class DB:
         except (AttributeError, MySQLdb.OperationalError):
             self.connect()
             return self.conn.cursor()
+        
+        
