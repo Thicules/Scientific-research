@@ -126,6 +126,32 @@ def show_all():
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
     return render_template('userAll.html', image_all=image_all, user_data=user_data)
 
+@app.route('/userGood')
+def show_good():
+    # Lấy thông tin người dùng từ cơ sở dữ liệu
+    user_id = session['id']
+
+    # Gọi model
+    positions = User.getAllGood()
+    user_data = User.getUserInfo(user_id=user_id)
+
+    # Render mẫu 'userGood.html' với danh sách vị trí
+    return render_template('userGood.html', positions=positions, user_data=user_data)
+
+@app.route('/userBad')
+def show_bad():
+    # Lấy thông tin người dùng từ cơ sở dữ liệu
+    user_id = session['id']
+
+    #Gọi model
+    results=User.getAllImg()
+    user_data = User.getUserInfo(user_id=user_id)
+    # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
+    image_all = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
+    
+    # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
+    return render_template('userBad.html', image_all=image_all, user_data=user_data)
+
 #Cái này là post tọa độ mới
 @app.route('/update_coordinates', methods=['POST'])
 def update_coordinates():
