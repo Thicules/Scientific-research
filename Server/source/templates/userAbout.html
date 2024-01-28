@@ -74,7 +74,6 @@
         <nav class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
             <a href="" class="navbar-brand p-0">
                 <h1 class="text-primary m-0"><i class="fa fa-map-marker-alt me-3"></i> Road Damage</h1>
-                <!-- <img src="img/logo.png" alt="Logo"> -->
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
@@ -103,8 +102,11 @@
                           data-mdb-toggle="dropdown"
                           aria-expanded="false"
                         >
-                        <div style="font-size: 2.5rem !important">
-                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        <div style="font-size: 2.5rem !important"> 
+                            {% if user_data['ava'] %} 
+                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
+                            {% endif %} 
                         </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
@@ -113,7 +115,7 @@
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
-                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                                    <p class="menu-item-text">{{ user_data.email }}</p>
                             </a>
                         </li>
                         <li>

@@ -102,8 +102,11 @@
                           data-mdb-toggle="dropdown"
                           aria-expanded="false"
                         >
-                        <div style="font-size: 2.5rem !important">
-                            <img class="avatar" src="static/img/base_user.jpg"/>                          
+                        <div style="font-size: 2.5rem !important"> 
+                            {% if user_data['ava'] %} 
+                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
+                            {% endif %} 
                         </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
@@ -112,7 +115,7 @@
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
-                                    <p class="menu-item-text">nhatthuthai@gmail.com</p>
+                                    <p class="menu-item-text">{{ user_data.email }}</p>
                             </a>
                         </li>
                         <li>
@@ -155,51 +158,48 @@
     </div>
     <!-- Navbar & Hero End -->
 
-   <!--Start Profile-->
-   <section class="h-100 gradient-custom-2">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-lg-9 col-xl-7">
-          <div class="card">
-            <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
-              <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                <img src="{{ user_data.ava }}"
-                  alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                  style="width: 150px; z-index: 1">
-                <a href="/editProfile" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
-                    Edit profile
-                </a>
+<!--Start Profile-->
+<div class="container py-5">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col">
+        <div class="card mx-auto" style="max-width: 600px;">
+          <div class="rounded-top text-white d-flex flex-row profile-header">
+            <div class="ms-4 mt-5 d-flex flex-column profile-avatar">
+              <img src="{{ user_data.ava }}" alt="Profile Picture" class="img-fluid img-thumbnail"  style="width: 100px; height: 120px;" />
+              <a href="/editProfile" class="btn btn-outline-dark" data-mdb-ripple-color="dark">
+                Edit profile
+              </a>
+            </div>
+            <div class="ms-3 profile-name">
+              <h5>{{ user_data['fullname'] }}</h5>
+              <h6>{{ user_data['state'] }}</h6>
+            </div>
+          </div>
+          <div class="p-4 text-black profile-stats">
+            <div class="d-flex justify-content-end text-center py-1">
+              <div>
+                <p class="mb-1 h5">253</p>
+                <p class="small text-muted mb-0">Photos</p>
               </div>
-              <div class="ms-3" style="margin-top: 130px;">
-                <h5> {{ user_data['fullname'] }} </h5>
-                <h6> {{ user_data['state'] }} </h6>
+              <div class="px-3">
+                <p class="mb-1 h5">1026</p>
+                <p class="small text-muted mb-0">Followers</p>
+              </div>
+              <div>
+                <p class="mb-1 h5">478</p>
+                <p class="small text-muted mb-0">Following</p>
               </div>
             </div>
-            <div class="p-4 text-black" style="background-color: #f8f9fa;">
-              <div class="d-flex justify-content-end text-center py-1">
-                <div>
-                  <p class="mb-1 h5">253</p>
-                  <p class="small text-muted mb-0">Photos</p>
-                </div>
-                <div class="px-3">
-                  <p class="mb-1 h5">1026</p>
-                  <p class="small text-muted mb-0">Followers</p>
-                </div>
-                <div>
-                  <p class="mb-1 h5">478</p>
-                  <p class="small text-muted mb-0">Following</p>
-                </div>
+          </div>
+          <div class="card-body p-4 text-black">
+            <div class="mb-5 profile-about">
+              <h5 class="mb-1">About</h5>
+              <div class="p-4" style="background-color: #f8f9fa;">
+                <p class="font-italic mb-1">{{ user_data['job'] }}</p>
+                <p class="font-italic mb-1">Lives in {{ user_data['street'] }}, {{ user_data['city'] }}, {{ user_data['state'] }}</p>
+                <p class="font-italic mb-0">{{ user_data['gender'] }}</p>
               </div>
             </div>
-            <div class="card-body p-4 text-black">
-              <div class="mb-5">
-                <p class="lead fw-normal mb-1">About</p>
-                <div class="p-4" style="background-color: #f8f9fa;">
-                  <p class="font-italic mb-1">{{ user_data['job'] }}</p>
-                  <p class="font-italic mb-1">Lives in {{ user_data['street'] }}, {{ user_data['city'] }}, {{ user_data['state'] }}</p>
-                  <p class="font-italic mb-0">{{ user_data['gender'] }}</p>
-                </div>
-              </div>
               <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="lead fw-normal mb-0">Recent photos</p>
                 <p class="mb-0"><a href="userPics" class="text-muted">Show all</a></p>
