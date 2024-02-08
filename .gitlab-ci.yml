@@ -35,12 +35,17 @@ build_image:
     - docker push $IMAGE_NAME:$IMAGE_TAG1
     - docker push $IMAGE_NAME:$IMAGE_TAG2
 
-deploy:
+deploy_web:
   stage: deploy
-  before_script:
-    - chmod 400 $SSH_KEY
-  script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@45.117.177.146 -p 22176 "
-        docker login --username 21522371@gm.uit.edu.vn --password Baongan6723 &&
-        docker ps -aq | xargs docker stop | xargs docker rm &&
-        docker run -d -p 8000:8080 $IMAGE_NAME:$IMAGE_TAG"
+  before_script: 
+    - export ssh_key="$ssh_key"
+    - echo "$ssh_key" > key.pem
+    - chmod 400 key.pem
+  script: 
+    - export ssh_key="$ssh_key"
+    - echo "$ssh_key" > key.pem
+    - ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@45.117.177.146 -p 22176 "
+       docker login --username 21522371@gm.uit.edu.vn --password Baongan6723 &&
+       docker ps -aq | xargs docker stop &&
+       docker ps -aq | xargs docker rm &&
+       docker run -d -p 8000:8080 $IMAGE_NAME:$IMAGE_TAG"
