@@ -41,9 +41,9 @@ deploy:
      - chmod 400 $SSH_KEY
    script:
      - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@45.117.177.146 -p 22176 "
-        docker login --username 21522371@gm.uit.edu.vn --password Baongan6723 && 
-        docker ps -aq | xargs docker stop | xargs docker rm && 
-        docker run -d -p 8000:8080 $IMAGE_NAME:$IMAGE_TAG"
+       docker login --username 21522371@gm.uit.edu.vn --password Baongan6723 && 
+       docker ps -aq | xargs docker stop | xargs docker rm && 
+       docker run -d -p 8000:8080 $IMAGE_NAME:$IMAGE_TAG"
 
 	
 	
