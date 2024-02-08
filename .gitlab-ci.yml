@@ -23,7 +23,7 @@ build_image:
   services:
     - docker:20.10.16-dind
   before_script:
-    - echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin
+    - $ docker login --username 21522371@gm.uit.edu.vn --password Baongan6723
   script:
     - cd Server
     - docker build -t $IMAGE_NAME:$IMAGE_TAG1 .
