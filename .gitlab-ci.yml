@@ -23,10 +23,10 @@ build_image:
   services:
     - docker:20.10.16-dind
   before_script:
-    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS --password-stdin
+    - echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin
   script:
     - cd Server
     - docker build -t $IMAGE_NAME:$IMAGE_TAG1 .
     - docker build -t $IMAGE_NAME:$IMAGE_TAG2 ./build_DB
-    - docker push baonganneee/scientific-research:server
-    - docker push baonganneee/scientific-research:database
+    - docker push IMAGE_NAME:IMAGE_TAG1
+    - docker push IMAGE_NAME:IMAGE_TAG2
