@@ -1,0 +1,32 @@
+run_tests:
+  image: python:3.10.10
+  before_script:
+    - apt-get update 
+  script:
+    - cd Server
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - python Build_web.py
+    - echo "The testing process has been completed"
+    - exit 0
+  artifacts:
+    paths:
+      - build/*
+
+
+build_image:
+  image: docker:20.10.16
+  variables:
+    IMAGE_NAME: baonganneee/scientific-research
+    IMAGE_TAG1: server1.0
+    IMAGE_TAG2: database1.0
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS --password-stdin
+  script:
+    - cd Server
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG1 .
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG2 ./build_DB
+    - docker push baonganneee/scientific-research:server
+    - docker push baonganneee/scientific-research:database
