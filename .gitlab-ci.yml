@@ -1,39 +1,38 @@
+variables:
+  IMAGE_NAME: nhatthu/testcicd
+  IMAGE_TAG: version_1.0
+
+stages:
+  - test
+  - build
+  - deploy
 
 run_tests:
+  stage: test
   image: python:3.10.10
   before_script:
-    - apt-get update 
+    - apt-get update && apt-get install make
   script:
-    - cd Server
-    - pip install --upgrade pip
-    - pip install -r requirements.txt
-    - python Build_web.py
-    - echo "The testing process has been completed"
-    - exit 0
-  artifacts:
-    paths:
-      - build/*
+    - ls
 
-build_image:
+.build:
+  stage: build
   image: docker:20.10.16
-  variables:
-    IMAGE_NAME: baonganneee/scientific-research
-    IMAGE_TAG1: server1.0
-    IMAGE_TAG2: database1.0
   services:
     - docker:20.10.16-dind
   before_script:
-    - docker login --username 21522371@gm.uit.edu.vn --password Baongan6723
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
-    - cd Server
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG1 .
-    - docker build -t $IMAGE_NAME:$IMAGE_TAG2 ./build_DB
-    - docker push $IMAGE_NAME:$IMAGE_TAG1
-    - docker push $IMAGE_NAME:$IMAGE_TAG2
+    - docker build -t $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA .
+    - docker push $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA
 
-deploy_web:
-  script: 
-    - ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ubuntu@45.117.177.146 -p 22176 "
-      docker login --username 21522371@gm.uit.edu.vn --password Baongan6723 && 
-      docker ps -aq | xargs docker stop | xargs docker rm && 
-      docker run -d -p 8000:8080 $IMAGE_NAME:$IMAGE_TAG"
+build-dev:
+  extends: .build
+deploy:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@45.117.177.146 -p 22176 "
+        docker pull $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA &&
+        docker run -d -p 5050:8080  $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA"
