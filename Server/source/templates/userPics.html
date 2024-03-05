@@ -42,8 +42,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-
-
 </head>
 
 <body>
@@ -55,7 +53,6 @@
     </div>
     <!-- Spinner End -->
    
-
     <!-- Topbar Start -->
     <div class="container-fluid bg-custom px-5 py-2 d-none d-lg-block">
         <div class="row gx-0">
@@ -192,7 +189,7 @@
                                 <p>Result: {{ image['result'] }}</p>
                             </a>
                         </div>
-                        <button class="userbtn delete"><i class="fa fa-trash"></i> Delete</button>
+                        <button class="userbtn delete" onclick="showDeleteConfirmation({{ image.id }})"><i class="fa fa-trash"></i> Delete</button>
                         <button class="userbtn edit" data-toggle="modal" data-target="#mapModal" id="{{image['id']}}" position="{{image['position']}}"><i class="bi bi-geo-alt-fill"></i>Edit</button>
                     </div>
                     <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
