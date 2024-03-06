@@ -673,7 +673,7 @@ body {
     position: center;
     display: flex;
     align-items: flex-start;
-    gap: 50px; /* Khoảng cách giữa ảnh và bản đồ */
+    gap: 50px; 
     justify-content: center;
 }
 
@@ -692,25 +692,6 @@ body {
     background-color: RoyalBlue;
   }
 
-  /* .popup-img {
-    width: 50px;
-    height: 100px; 
-    border-radius: 5px; 
-    border: 1px solid #050094; 
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
-} */
-
-/* .left img {
-    width:30%;
-    height:80px;
-    margin: -1px 0 -15px -10px;
-    border-radius:10px;
-}
-.right {
-    float: left;
-    width: 100%;
-} */
-
 .popup-content {
     display: flex;
     align-items: center;
@@ -725,3 +706,4 @@ body {
 .popup-text {
     flex-grow: 1; /* Văn bản sẽ chiếm hết phần còn lại của popup */
 }
+
