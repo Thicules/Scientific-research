@@ -704,6 +704,12 @@ body {
 }
 
 .popup-text {
-    flex-grow: 1; /* Văn bản sẽ chiếm hết phần còn lại của popup */
+    flex-grow: 1; 
 }
 
+.google-map-container{
+    width: 200%;
+    height: 100%;
+    position: relative;
+    left: 25%;
+}
