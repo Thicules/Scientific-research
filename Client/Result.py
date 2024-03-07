@@ -7,10 +7,10 @@ import random
 
 # Đường dẫn đến file ảnh cần gửi lên server
 
-image_path = 'C:/Users/Nhat Thu/Downloads/test2.jpg'
+image_path = 'C:/Users/Nhat Thu/Downloads/goodnha.jpg'
 #Thông tin user
-username = "nhatthu"
-password = "21522648"
+username = "nnhp"
+password = "nnhp"
 
 
 
