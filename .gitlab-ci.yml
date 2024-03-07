@@ -1,0 +1,38 @@
+variables:
+  IMAGE_NAME: nhatthu/testcicd
+  IMAGE_TAG: version_1.0
+
+stages:
+  - test
+  - build
+  - deploy
+
+run_tests:
+  stage: test
+  image: python:3.10.10
+  before_script:
+    - apt-get update && apt-get install make
+  script:
+    - ls
+
+.build:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+  script:
+    - docker build -t $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA .
+    - docker push $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA
+
+build-dev:
+  extends: .build
+deploy:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY ubuntu@45.117.177.146 -p 22176 "
+        docker pull $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA &&
+        docker run -d -p 5050:8080  $IMAGE_NAME:v1.0.0-$CI_COMMIT_SHA"

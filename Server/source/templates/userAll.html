@@ -34,16 +34,12 @@
     <link rel="stylesheet" type="text/css" href="./style.css" />
     <script type="module" src="./index.js"></script>
 
-<!-- Thêm đoạn mã CSS cho bản đồ -->
-<title>Add Map</title>
-<script src="https://maps.googleapis.com/maps/api/js"></script>
-
-<!-- Các tệp CSS và JavaScript của Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-
-
+    <!-- Thêm đoạn mã CSS cho bản đồ -->
+    <title>Add Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <!-- Các tệp CSS và JavaScript của Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -55,7 +51,6 @@
     </div>
     <!-- Spinner End -->
    
-
     <!-- Topbar Start -->
     <div class="container-fluid bg-custom px-5 py-2 d-none d-lg-block">
         <div class="row gx-0">
@@ -108,48 +103,45 @@
                 </div>
 
                 <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
-                    <div class="dropdown ">
-                        <a
-                          href="#"
-                          role="button"
-                          id="dropdownMenuLink"
-                          data-mdb-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                        <div style="font-size: 2.5rem !important"> 
-                            {% if user_data['ava'] %} 
-                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
-                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
-                            {% endif %} 
-                        </div>
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div style="font-size: 2.5rem !important"> 
+                                {% if user_data['ava'] %} 
+                                <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                                {% else %} 
+                                <img class="avatar" src="static/img/base_user.jpg"/> 
+                                {% endif %} 
+                            </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
-                          <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
                                     <p class="menu-item-text">{{ user_data.email }}</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-person-lines-fill"></i>
                                     </div>
                                     <p class="menu-item-text">Profile</p>   
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="home">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="home">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-door-open-fill"></i>
                                     </div>
                                     <p class="menu-item-text">Log out</p>                           
-                            </a>
-                        </li>                     
+                                </a>
+                            </li>                     
                         </ul>
                     </div>
+                    <!--End dropdown-->
                 </div>
             </div>
         </nav>
@@ -174,71 +166,79 @@
     <!-- Navbar & Hero End -->
 
 
-
-<!-- Images Start -->
-<div class="container-xxl py-5 destination">
-    <div class="container">
-        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">All</h6>
-            <h1 class="mb-5">Road Images</h1>
-        </div>
-        <div class="row g-3">
-            {% for image in image_all %}
-            <div class="col-lg-7 col-md-6">
-                <div class="d-flex align-items-center mb-5">
-                    <div class="col-md-12 wow zoomIn mx-auto col-xl-9" data-wow-delay="0.3s">
-                        <div class="image-map-container d-flex align-items-center">
-                            <a class="position-relative d-block overflow-hidden" href="">
-                                <div class="image-container">
-                                    <img src="{{ image['path'] }}" alt="Image" width="100%" style="max-width: 232px;">
-                                </div>
-                                <p>Result: {{ image['result'] }}</p>
-                            </a>
+    <!-- Images Start -->
+    <div class="container-xxl py-5 destination">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">All</h6>
+                <h1 class="mb-5">Road Images</h1>
+            </div>
+            <div class="row g-3">
+                {% for image in image_all %}
+                <div class="col-lg-7 col-md-6">
+                    <div class="d-flex align-items-center mb-5">
+                        <div class="col-md-12 wow zoomIn mx-auto col-xl-9" data-wow-delay="0.3s">
+                            <div class="image-map-container d-flex align-items-center">
+                                <a class="position-relative d-block overflow-hidden" href="">
+                                    <div class="image-container">
+                                        <img src="{{ image['path'] }}" data-src="{{ image['path'] }}" alt="Image" width="100%" style="max-width: 232px;">
+                                    </div>
+                                    <p>Result: {{ image['result'] }}</p>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
-                        <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
-                            <div class="google-map" id="map_{{ loop.index }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                        <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
+                            <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
+                                <div class="google-map" id="map_{{ loop.index }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %} 
-        </div>   
+                {% endfor %} 
+            </div>   
+        </div>
     </div>
-</div>
-<!-- Images End -->
+    <!-- Images End -->
+    
+    <!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
+    <script>
+        {% for image in image_all %}
+        function initMap_{{ loop.index }}() {
+            // Lấy tọa độ từ image_all
+            const position = "{{ image['position'] }}";
+            const [lat, long] = position.split(",");
+            // Vị trí của bản đồ
+            const position_{{ loop.index }} = [lat, long];
+            // Khởi tạo bản đồ
+            const mapOptions_{{ loop.index }} = {
+                center: position_{{ loop.index }},
+                zoom: 12,
+            };
+            const map_{{ loop.index }} = L.map("map_{{ loop.index }}", mapOptions_{{ loop.index }});
+            // Thêm lớp bản đồ từ OpenStreetMap
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map_{{ loop.index }});
 
+            // Đánh dấu vị trí trên bản đồ
+            const marker = L.marker(position_{{ loop.index }}).addTo(map_{{ loop.index }});
+            // Tạo biến cho các phần trong popup
+            const imageSrc = document.querySelectorAll('.image-container img')[{{ loop.index - 1 }}].getAttribute('data-src');
+            const latPart = "<strong>Lat:</strong> " + lat;
+            const longPart = "<strong>Long:</strong> " + long;
+            const resultPart = "<strong>Result:</strong> " + "{{ image['result'] }}"; 
 
+            // Tạo chuỗi popup từ các biến đã tạo
+            var popupContent = "<div class='popup-content'><img class='popup-image' src='" + imageSrc + "' /><div class='popup-text'>" + latPart + "<br>" + longPart + "<br>" + resultPart + "</div></div>";
 
-<!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
-<script>
-    {% for image in image_all %}
-    function initMap_{{ loop.index }}() {
-        // Lấy tọa độ từ image_all
-        const position = "{{ image['position'] }}";
-        const [lat, long] = position.split(",");
-        // Vị trí của bản đồ
-        const position_{{ loop.index }} = [lat, long];
-        // Khởi tạo bản đồ
-        const mapOptions_{{ loop.index }} = {
-            center: position_{{ loop.index }},
-            zoom: 12,
-        };
-        const map_{{ loop.index }} = L.map("map_{{ loop.index }}", mapOptions_{{ loop.index }});
-        // Thêm lớp bản đồ từ OpenStreetMap
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map_{{ loop.index }});
-        // Đánh dấu vị trí trên bản đồ
-        L.marker(position_{{ loop.index }}).addTo(map_{{ loop.index }})
-            .bindPopup("Image location: Latitude " + lat + ", Longitude " + long)
-            .openPopup();
-    }
-    // Gọi hàm initMap_{{ loop.index }} cho từng hình ảnh
-    initMap_{{ loop.index }}();
-    {% endfor %}
-</script>
+            // Gán popup cho marker
+            marker.bindPopup(popupContent).openPopup();
+        }
+        // Gọi hàm initMap_{{ loop.index }} cho từng hình ảnh
+        initMap_{{ loop.index }}();
+        {% endfor %}
+    </script>
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -314,11 +314,8 @@
     </div>
     <!-- Footer End -->
 
-
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

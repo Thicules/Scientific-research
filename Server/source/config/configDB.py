@@ -5,7 +5,7 @@ class DB:
     DBNAME = "weblogin"
     DBIP = "localhost"
     DBUSER = "root"
-    DBPASS = "123456"
+    DBPASS = "21522648"
     def __init__(self):
         self.conn = MySQLdb.connect(self.DBIP,self.DBUSER,self.DBPASS,self.DBNAME)
 
@@ -15,3 +15,5 @@ class DB:
         except (AttributeError, MySQLdb.OperationalError):
             self.connect()
             return self.conn.cursor()
+        
+        

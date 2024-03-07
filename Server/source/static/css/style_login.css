@@ -180,8 +180,20 @@ body {
   width: 100%;
   margin: 10px 0;
   position: relative;
+  z-index: 1;
 }
-
+.input-box .fa-eye {
+  right: 20px; 
+  align-items: center;
+  transform: translateY(-50%); 
+  z-index: 2;
+}
+.input-box .fa-eye-slash {
+  right: 20px; 
+  align-items: center;
+  transform: translateY(-50%); 
+  z-index: 2;
+}
 .form-content .input-box input {
   height: 100%;
   width: 100%;

@@ -577,7 +577,7 @@ body {
   }
 
   .profile-header {
-    background: linear-gradient(181deg, rgb(2, 0, 97) 15%, rgb(97, 149, 219) 158.5%);
+    background: linear-gradient(181deg, rgb(63, 61, 193) 15%, rgb(97, 149, 219) 158.5%);
     background-size: cover;
     background-position: center;
     height: 200px; 
@@ -673,13 +673,13 @@ body {
     position: center;
     display: flex;
     align-items: flex-start;
-    gap: 50px; /* Khoảng cách giữa ảnh và bản đồ */
+    gap: 50px; 
     justify-content: center;
 }
 
 /* Style buttons in userPic */
 .userbtn {
-    background-color: rgb(193, 19, 19); 
+    background-color: rgb(156, 23, 23); 
     border: none; 
     color: white; 
     padding: 12px 16px; 
@@ -691,3 +691,19 @@ body {
   .userbtn:hover {
     background-color: RoyalBlue;
   }
+
+.popup-content {
+    display: flex;
+    align-items: center;
+}
+
+.popup-image {
+    width: 50px;
+    height: 50px; 
+    margin-right: 10px; 
+}
+
+.popup-text {
+    flex-grow: 1; /* Văn bản sẽ chiếm hết phần còn lại của popup */
+}
+
