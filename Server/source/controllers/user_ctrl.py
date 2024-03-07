@@ -132,11 +132,14 @@ def show_good():
     user_id = session['id']
 
     # Gọi model
-    positions = User.getAllGood()
+    results = User.getAllGood()
     user_data = User.getUserInfo(user_id=user_id)
+    # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
+    image_good = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
+
 
     # Render mẫu 'userGood.html' với danh sách vị trí
-    return render_template('userGood.html', positions=positions, user_data=user_data)
+    return render_template('userGood.html', image_good=image_good, user_data=user_data)
 
 @app.route('/userBad')
 def show_bad():
@@ -144,13 +147,13 @@ def show_bad():
     user_id = session['id']
 
     #Gọi model
-    results=User.getAllImg()
+    results=User.getAllBad()
     user_data = User.getUserInfo(user_id=user_id)
     # Lấy danh sách đường dẫn hình ảnh và vị trí từ kết quả truy vấn
-    image_all = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
+    image_bad = [{'result': result[0], 'position': result[1], 'path': result[2]} for result in results]
     
     # Render mẫu 'userPics.html' với danh sách đường dẫn hình ảnh và vị trí
-    return render_template('userBad.html', image_all=image_all, user_data=user_data)
+    return render_template('userBad.html', image_bad=image_bad, user_data=user_data)
 
 #Cái này là post tọa độ mới
 @app.route('/update_coordinates', methods=['POST'])
