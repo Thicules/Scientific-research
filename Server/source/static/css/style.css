@@ -392,6 +392,12 @@
     border-color: var(--primary);
 }
 
+.google-map-container{
+    width: 200%;
+    height: 100%;
+    position: relative;
+    left: 25%;
+}
 
 /*** Footer ***/
 .footer .btn.btn-social {

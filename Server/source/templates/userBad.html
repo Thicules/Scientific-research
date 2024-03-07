@@ -100,8 +100,8 @@
                         <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Gallery</a>
                         <div class="dropdown-menu m-0">
                             <a href="userAll" class="dropdown-item">All</a>
-                            <a href="userGood" class="dropdown-item active">Good Road</a>
-                            <a href="userBad" class="dropdown-item">Bad Road</a>
+                            <a href="userGood" class="dropdown-item">Good Road</a>
+                            <a href="userBad" class="dropdown-item active">Bad Road</a>
                         </div>
                     </div>
                     <a href="userContact" class="nav-item nav-link">Contact</a>
@@ -160,8 +160,7 @@
                             <ol class="breadcrumb justify-content-center">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                 <li class="breadcrumb-item"><a href="#">Gallery</a></li>
-                                <li class="breadcrumb-item"><a href="#">All</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">Good Road</li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">Bad Road</li>
                             </ol>
                         </nav>
                     </div>
@@ -170,6 +169,79 @@
         </div>
     </div>
     <!-- Navbar & Hero End -->
+
+    <!-- Images Start -->
+    <div class="container-xxl py-5 destination">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Bad</h6>
+                <h1 class="mb-5">Road Images</h1>
+            </div>
+            <div class="row g-3">
+                {% for image in image_bad %}
+                <div class="col-lg-7 col-md-6">
+                    <div class="d-flex align-items-center mb-5">
+                        <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
+                            <div class="image-container" data-popup-src="{{ image['path'] }}"></div>                    
+                            <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 90%;">
+                                <div id="map" style="width: 800px; height: 600px"></div>
+                                <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %} 
+            </div>   
+        </div>
+    </div>
+    <!-- Images End -->
+
+    <!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
+    <script>
+        // Khởi tạo bản đồ
+        var map = L.map('map').setView([0, 0], 2); // Thiết lập vị trí và mức zoom ban đầu
+        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Danh sách các hình ảnh và thông tin tương ứng
+        var image_all = [
+            {% for image in image_bad %}
+                {
+                    position: [{{ image['position'] }}],
+                    result: "{{ image['result'] }}",
+                    path: "{{ image['path'] }}"
+                },
+            {% endfor %}
+        ];
+
+        // Thêm các marker vào bản đồ
+        for (var i = 0; i < image_all.length; i++) {
+            var image = image_all[i];
+            var position = image.position;
+            var result = image.result;
+
+            // Truy xuất đường dẫn hình ảnh từ thuộc tính data-popup-src
+            var imageContainer = document.querySelectorAll('.image-container')[i];
+            var path = imageContainer.getAttribute('data-popup-src');
+
+            // Tạo marker và popup tương ứng
+            var marker = L.marker(position).addTo(map);
+            var popupContent = `
+                <div class='popup-content'>
+                    <img class='popup-image' src='${path}' />
+                    <div class='popup-text'>
+                        <strong>Lat:</strong> ${position[0]}<br>
+                        <strong>Long:</strong> ${position[1]}<br>
+                        <strong>Result:</strong> ${result}
+                    </div>
+                </div>`;
+            marker.bindPopup(popupContent);
+        }
+    </script>
 
 
     <!-- Footer Start -->
