@@ -82,12 +82,20 @@ class User:
         db = DB()
         cursor = db.cursor()
         # Truy vấn dữ liệu từ cơ sở dữ liệu
-        cursor.execute("SELECT result, position FROM images WHERE result = 'cat'")
+        cursor.execute("SELECT result, position, path FROM images WHERE result = 'Good'")
         results = cursor.fetchall()
         cursor.close()
-
-        filtered_results = [row[1] for row in results]
-        return filtered_results
+        return results
+    
+    @staticmethod
+    def getAllBad(): 
+        db = DB()
+        cursor = db.cursor()
+        # Truy vấn dữ liệu từ cơ sở dữ liệu
+        cursor.execute("SELECT result, position, path FROM images WHERE result = 'Bad'")
+        results = cursor.fetchall()
+        cursor.close()
+        return results
     
     @staticmethod
     def editPosition(id,position):

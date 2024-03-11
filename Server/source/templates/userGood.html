@@ -100,56 +100,52 @@
                         <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Gallery</a>
                         <div class="dropdown-menu m-0">
                             <a href="userAll" class="dropdown-item">All</a>
-                            <a href="userGood" class="dropdown-item">Good Road</a>
-                            <a href="userBad" class="dropdown-item active">Bad Road</a>
+                            <a href="userGood" class="dropdown-item active">Good Road</a>
+                            <a href="userBad" class="dropdown-item">Bad Road</a>
                         </div>
                     </div>
                     <a href="userContact" class="nav-item nav-link">Contact</a>
                 </div>
 
                 <div class="d-flex flex-row  gap-1 ml-auto align-items-center gap-md">
-                    <div class="dropdown ">
-                        <a
-                          href="#"
-                          role="button"
-                          id="dropdownMenuLink"
-                          data-mdb-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                        <div style="font-size: 2.5rem !important"> 
-                            {% if user_data['ava'] %} 
-                            <img class="avatar" src="{{ user_data['ava'] }}"/> 
-                            {% else %} <img class="avatar" src="static/img/base_user.jpg"/> 
-                            {% endif %} 
-                        </div>
+                    <div class="dropdown">
+                        <a href="javascript:void(0);" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div style="font-size: 2.5rem !important"> 
+                                {% if user_data['ava'] %} 
+                                <img class="avatar" src="{{ user_data['ava'] }}"/> 
+                                {% else %} 
+                                <img class="avatar" src="static/img/base_user.jpg"/> 
+                                {% endif %} 
+                            </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-user" aria-labelledby="dropdownMenuLink" >
-                          <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="#">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-envelope-fill"></i> 
                                     </div>
                                     <p class="menu-item-text">{{ user_data.email }}</p>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="profile">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-person-lines-fill"></i>
                                     </div>
                                     <p class="menu-item-text">Profile</p>   
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="home">
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex flex-row gap-sm align-item-center" href="home">
                                     <div class="icon-size-sm">
                                         <i class="bi bi-door-open-fill"></i>
                                     </div>
                                     <p class="menu-item-text">Log out</p>                           
-                            </a>
-                        </li>                     
+                                </a>
+                            </li>                     
                         </ul>
                     </div>
+                    <!--End dropdown-->
                 </div>
             </div>
         </nav>
@@ -163,7 +159,6 @@
                             <ol class="breadcrumb justify-content-center">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                 <li class="breadcrumb-item"><a href="#">Gallery</a></li>
-                                <li class="breadcrumb-item"><a href="#">All</a></li>
                                 <li class="breadcrumb-item text-white active" aria-current="page">Good Road</li>
                             </ol>
                         </nav>
@@ -174,44 +169,81 @@
     </div>
     <!-- Navbar & Hero End -->
 
+
+
     <!-- Images Start -->
     <div class="container-xxl py-5 destination">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Good Road</h6>
+                <h6 class="section-title bg-white text-center text-primary px-3">Good</h6>
                 <h1 class="mb-5">Road Images</h1>
             </div>
             <div class="row g-3">
+                {% for image in image_good %}
                 <div class="col-lg-7 col-md-6">
                     <div class="d-flex align-items-center mb-5">
                         <div class="col-md-12 wow zoomIn mx-auto col-xl-12" data-wow-delay="0.3s">
-                            <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 66.6%; width: 100%;">
-                                <div class="google-map" id="map"></div>
+                            <div class="image-container" data-popup-src="{{ image['path'] }}"></div>                    
+                            <div class="google-map-container" style="position: relative; height: 0; overflow: hidden; padding-bottom: 90%;">
+                                <div id="map" style="width: 800px; height: 600px"></div>
+                                <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>                        
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                {% endfor %} 
+            </div>   
         </div>
     </div>
     <!-- Images End -->
 
-    <!-- Đoạn mã JavaScript cho bản đồ -->
+    <!-- Đoạn mã JavaScript cho bản đồ Leaflet -->
     <script>
-        // Tạo bản đồ và đặt tọa độ ban đầu và mức thu phóng
-        var map = L.map('map').setView([51.505, -0.09], 13);
-
-        // Thêm lớp bản đồ OpenStreetMap
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // Khởi tạo bản đồ
+        var map = L.map('map').setView([0, 0], 2); // Thiết lập vị trí và mức zoom ban đầu
+        mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
         }).addTo(map);
 
-        // Thêm đánh dấu và cửa sổ thông báo popup
-        L.marker([11.94446627102782, 108.45876308642964]).addTo(map)
-            .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-            .openPopup();
-    </script>    
-    
+        // Danh sách các hình ảnh và thông tin tương ứng
+        var image_all = [
+            {% for image in image_good %}
+                {
+                    position: [{{ image['position'] }}],
+                    result: "{{ image['result'] }}",
+                    path: "{{ image['path'] }}"
+                },
+            {% endfor %}
+        ];
+
+        // Thêm các marker vào bản đồ
+        for (var i = 0; i < image_all.length; i++) {
+            var image = image_all[i];
+            var position = image.position;
+            var result = image.result;
+
+            // Truy xuất đường dẫn hình ảnh từ thuộc tính data-popup-src
+            var imageContainer = document.querySelectorAll('.image-container')[i];
+            var path = imageContainer.getAttribute('data-popup-src');
+
+            // Tạo marker và popup tương ứng
+            var marker = L.marker(position).addTo(map);
+            var popupContent = `
+                <div class='popup-content'>
+                    <img class='popup-image' src='${path}' />
+                    <div class='popup-text'>
+                        <strong>Lat:</strong> ${position[0]}<br>
+                        <strong>Long:</strong> ${position[1]}<br>
+                        <strong>Result:</strong> ${result}
+                    </div>
+                </div>`;
+            marker.bindPopup(popupContent);
+        }
+    </script>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-custom text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
